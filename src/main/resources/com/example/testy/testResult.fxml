@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="Background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.testy.TestResultController">
+   <children>
+      <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Text fx:id="nazwaTestuText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="NazwaEkranu" text="Nazwa testu" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+      <HBox alignment="CENTER" fillHeight="false" prefHeight="420.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox fx:id="vBoxWynik" alignment="CENTER" spacing="20.0" styleClass="SzczegolyTestu" stylesheets="@style.css" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+               </padding>
+               <children>
+                  <Text fx:id="wynikText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="wynikTestuText" text="Wynik testu:&#10;75/100 (75%)" textAlignment="CENTER" />
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <opaqueInsets>
+            <Insets left="50.0" right="50.0" />
+         </opaqueInsets>
+      </HBox>
+      <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="900.0" spacing="20.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onPokazOdpowiedziButtonClick" text="Pokaż odpowiedzi" />
+            <Button mnemonicParsing="false" onAction="#onRozwiazPonownieButtonClick" text="Rozwiąż ponownie" />
+            <Button mnemonicParsing="false" onAction="#onWrocButtonClick" stylesheets="@style.css" text="Wróć od listy testów" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="-35.0" />
+         </VBox.margin>
+      </VBox>
+      <VBox alignment="BOTTOM_RIGHT">
+         <children>
+            <ImageView fx:id="help" fitHeight="24.0" fitWidth="24.0" onMouseClicked="#onHelpClick" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/help.png" />
+               </image>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </ImageView>
+         </children>
+      </VBox>
+   </children>
+</VBox>

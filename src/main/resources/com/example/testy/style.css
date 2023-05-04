@@ -1,0 +1,204 @@
+.Background {
+    -fx-background-color: #1e1e1e;
+}
+
+Text {
+    -fx-fill: #FFFFFF;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+}
+
+TextField, PasswordField {
+	-fx-text-fill: #FFFFFF;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+    -fx-background-color: #3A3A3A;
+}
+
+Button {
+    -fx-background-color: #0080FF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+    -fx-pref-width: 150px;
+    -fx-min-width: 150px;
+    -fx-min-height: 30px;
+    -fx-max-width: 150px;
+    -fx-max-height: 30px;
+}
+
+.RemoveTest {
+	-fx-background-color: #DD0000;
+}
+
+.ListButton {
+	-fx-pref-width: 100px;
+    -fx-min-width: 100px;
+    -fx-min-height: 30px;
+    -fx-max-width: 100px;
+    -fx-max-height: 30px;
+}
+
+.Logo {
+	-fx-fit-width: 350;
+}
+
+.NazwaEkranu {
+    -fx-fill: #FFFFFF;
+    -fx-font: 54px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.Attention {
+    -fx-fill: #FF0000;
+    -fx-font: 15px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.NumerPytania {
+    -fx-text-fill: white;
+    -fx-font: 24px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.PointsTextField {
+	-fx-alignment: center;
+	-fx-min-width: 35px;
+    -fx-min-height: 30px;
+    -fx-max-width: 35px;
+    -fx-max-height: 30px;
+}
+
+.TrescPytania {
+    -fx-text-fill: white;
+  	-fx-font: 18px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.Usun {
+	-fx-background-color: #DD0000;
+    -fx-text-fill: #FFFFFF;
+	-fx-font: 14px "calibiri";
+	-fx-font-weight: bold;
+	-fx-min-width: 30px;
+	-fx-min-height: 30px;
+	-fx-max-width: 30px;
+	-fx-max-height: 30px;
+}
+
+ScrollPane > .viewport {
+    -fx-background-color: #222222;
+    -fx-border-color: black;
+}
+
+ScrollPane {
+    -fx-background-color:transparent;
+}
+
+Pane {
+    -fx-background-radius: 18;
+}
+
+.TloWiersza {
+    -fx-background-color: #2f2f2f;
+    -fx-pref-height: 150;
+    -fx-background-radius: 18;
+    -fx-padding: 10;
+}
+
+.TestNazwaLista {
+    -fx-font: 24px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.SzczegolyTestu {
+	-fx-background-color: #2f2f2f;
+	-fx-pref-height: 150;
+	-fx-background-radius: 18;
+}
+
+.SzczegolyTestuText {
+	-fx-font: 20px "calibiri";
+	-fx-font-weight: bold;
+}
+
+.wynikTestuText {
+	-fx-font: 20px "calibiri";
+	-fx-font-weight: bold;
+}
+
+.Separator {
+	-fx-font: 26px "calibiri";
+}
+
+/* ComboBox */
+
+ComboBox {
+    -fx-background-color: #3A3A3A;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-border-width: 0;
+}
+
+.combo-box .list-cell:selected .text {
+    -fx-fill: white;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #3A3A3A;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: #3A3A3A;
+    -fx-text-fill: white;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #222222;
+}
+
+/* Scroll bar */
+
+.scroll-bar {
+    -fx-pref-width: 18;
+    -fx-pref-height: 18;
+    -fx-padding: 3;
+    -fx-background-color: #2f2f2f;
+}
+
+.corner {
+	-fx-background-color: #2f2f2f;
+}
+
+.thumb {
+    -fx-background-color: #222222;
+}
+
+.increment-button, .decrement-button, .decrement-button > .decrement-arrow, .increment-button > .increment-arrow {
+    -fx-padding: 0 0 0 0;
+}
+
+/* RadioButton */
+
+.radio-button {
+    -fx-text-fill: white;
+    -fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.radio-button .radio {
+    -fx-text-fill: white;
+    -fx-mark-color: #0080FF;
+}
+
+/* CheckBox */
+
+CheckBox {
+	-fx-text-fill: white;
+	-fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+}
