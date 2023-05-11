@@ -27,8 +27,32 @@ Button {
     -fx-max-height: 30px;
 }
 
-.RemoveTest {
-	-fx-background-color: #DD0000;
+Button:hover {
+	-fx-background-color: #0066CC;
+	-fx-text-fill: lightgray;
+}
+
+Button:pressed  {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.Usun {
+    -fx-text-fill: #FFFFFF;
+	-fx-font: 14px "calibiri";
+	-fx-font-weight: bold;
+	-fx-min-width: 30px;
+	-fx-min-height: 30px;
+	-fx-max-width: 30px;
+	-fx-max-height: 30px;
+}
+
+.RemoveTest, .Usun{
+	-fx-background-color: #DE0000;
+}
+
+.Usun:hover, .RemoveTest:hover {
+	-fx-background-color: #BF0000;
 }
 
 .ListButton {
@@ -73,17 +97,6 @@ Button {
     -fx-text-fill: white;
   	-fx-font: 18px "calibiri";
     -fx-font-weight: bold;
-}
-
-.Usun {
-	-fx-background-color: #DD0000;
-    -fx-text-fill: #FFFFFF;
-	-fx-font: 14px "calibiri";
-	-fx-font-weight: bold;
-	-fx-min-width: 30px;
-	-fx-min-height: 30px;
-	-fx-max-width: 30px;
-	-fx-max-height: 30px;
 }
 
 ScrollPane > .viewport {
@@ -201,4 +214,35 @@ CheckBox {
 	-fx-text-fill: white;
 	-fx-font: 14px "calibiri";
     -fx-font-weight: bold;
+}
+
+/* Alert */
+
+DialogPane, DialogPane:header *.header-panel {
+	-fx-background-color: #1e1e1e;
+	-fx-fill: white;
+}
+
+DialogPane > *.label.content, DialogPane:header *.header-panel *.label {
+	-fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+DialogPane:header *.header-panel *.label {
+	-fx-font: 22px "calibiri";
+	-fx-font-weight: bold;
+}
+
+DialogPane .button {
+	-fx-min-width: 100px;
+	-fx-max-width: 100px;
+}
+
+.AlertRedButton {
+	-fx-background-color: #DE0000;
+}
+
+.AlertRedButton:hover {
+	-fx-background-color: #BF0000;
 }

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SceneSwitcher {
-	public static void switchScene(ActionEvent event, String fxmlFile) throws IOException {
+	public static FXMLLoader switchScene(ActionEvent event, String fxmlFile) throws IOException {
 		FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
 		Parent root = loader.load();
 		double width = ((Node) event.getSource()).getScene().getWidth();
@@ -20,6 +20,8 @@ public class SceneSwitcher {
 		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		stage.setScene(scene);
 		stage.show();
+
+		return loader;
 	}
 
 	public void onHelpClick(ActionEvent event) {

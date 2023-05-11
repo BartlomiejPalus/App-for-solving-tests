@@ -2,8 +2,12 @@ package com.example.testy;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
@@ -12,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -60,15 +65,13 @@ public class MyTestsController implements Initializable {
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
-
-				//SzczegolyTestuController controller = fxmlLoader.getController();
-				//controller.setTestID((int) editButton.getUserData());
-				//stage.show();
 			});
 
 			editButton.setOnAction(e -> {
 				try {
-					switchScene(e, "addTest.fxml");
+					FXMLLoader loader = switchScene(e, "addTest.fxml");
+					AddTestController controller = loader.getController();
+					controller.setState("editTest");
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
@@ -89,7 +92,7 @@ public class MyTestsController implements Initializable {
 
 	}
 
-	public void onResetujButtonClick(ActionEvent event){
+	public void onResetujButtonClick(){
 		nazwaTestuTextField.setText("");
 		kategorieComboBox.getSelectionModel().selectFirst();
 		iloscPytanComboBox.getSelectionModel().selectFirst();
@@ -98,7 +101,9 @@ public class MyTestsController implements Initializable {
 	}
 
 	public void onDodajTestButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, "addTest.fxml");
+		FXMLLoader loader = switchScene(event, "addTest.fxml");
+		AddTestController controller = loader.getController();
+		controller.setState("addTest");
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {

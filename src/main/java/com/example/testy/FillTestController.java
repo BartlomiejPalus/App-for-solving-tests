@@ -4,14 +4,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.example.testy.SceneSwitcher.switchScene;
@@ -69,6 +73,28 @@ public class FillTestController implements Initializable {
 	}
 
 	public void onZakonczButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, "testResult.fxml");
+		ButtonType deleteButton = new ButtonType("Zakończ", ButtonBar.ButtonData.OK_DONE);
+		ButtonType cancelButton = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", deleteButton, cancelButton);
+
+		alert.setTitle("Zakończ test");
+		alert.setHeaderText("Czy na pewno chcesz zakończyć test?");
+
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
+
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("icons/appIcon.png")).openStream()));
+
+		Node discardButton = alert.getDialogPane().lookupButton(deleteButton);
+		discardButton.getStyleClass().add("AlertRedButton");
+
+		Optional<ButtonType> option = alert.showAndWait();
+
+		if(option.isPresent()) {
+			if (option.get() == deleteButton) {
+				switchScene(event, "testResult.fxml");
+			}
+		}
 	}
 }

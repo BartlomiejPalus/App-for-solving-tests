@@ -4,8 +4,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -19,7 +21,7 @@
    <children>
       <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="NazwaEkranu" text="Dodaj test" />
+            <Text fx:id="windowNameText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="NazwaEkranu" text="Dodaj test" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -91,26 +93,35 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Widoczność:" GridPane.rowIndex="7" />
                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
-                              <CheckBox fx:id="amountOfQuestionsInApproachCheckBox" minWidth="100.0" mnemonicParsing="false" text="Wszystkie" />
-                              <TextField fx:id="amountOfQuestionsInApproachTextField" maxWidth="60.0" prefHeight="30.0" HBox.hgrow="ALWAYS" />
+                              <CheckBox fx:id="allCheckBox" minWidth="100.0" mnemonicParsing="false" onAction="#onAllCheckBoxClick" selected="true" text="Wszystkie" />
+                              <TextField fx:id="amountOfQuestionsInApproachTextField" disable="true" maxWidth="60.0" prefHeight="30.0" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <CheckBox fx:id="amountOfApproachCheckBox" minWidth="100.0" mnemonicParsing="false" text="Bez limitu" />
-                              <TextField fx:id="amountOfApproachTextField" maxWidth="60.0" prefHeight="30.0" HBox.hgrow="ALWAYS" />
+                              <CheckBox fx:id="unlimitedCheckBox" minWidth="100.0" mnemonicParsing="false" onAction="#onUnlimitedCheckBoxClick" selected="true" text="Bez limitu" />
+                              <TextField fx:id="amountOfApproachTextField" disable="true" maxWidth="60.0" prefHeight="30.0" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hasło:" GridPane.rowIndex="6" />
                         <TextField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Możliwość&#10;przeglądania:" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="isOverviewableComboBox" prefHeight="30.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Domyślna&#10;punktacja:" />
                         <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0" GridPane.columnIndex="1">
                            <children>
                               <TextField fx:id="defaultGoodTextField" alignment="CENTER" promptText="+" styleClass="PointsTextField" text="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Separator" text="/" textAlignment="CENTER" />
                               <TextField fx:id="defaultBadTextField" alignment="CENTER" promptText="-" styleClass="PointsTextField" text="0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <children>
+                              <RadioButton fx:id="isOverviewableRadio" mnemonicParsing="false" selected="true" text="Tak">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="isOverviewableGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="isNotOverviewableRadio" mnemonicParsing="false" text="Nie" toggleGroup="$isOverviewableGroup" />
                            </children>
                         </HBox>
                      </children>
@@ -128,7 +139,7 @@
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="RemoveTest" text="Usuń test" />
+                  <Button fx:id="deleteTestButton" mnemonicParsing="false" onAction="#onDeleteTestButtonClick" styleClass="RemoveTest" text="Usuń test" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
