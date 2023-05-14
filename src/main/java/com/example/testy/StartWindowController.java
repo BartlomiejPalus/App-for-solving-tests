@@ -7,6 +7,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import static com.example.testy.SceneSwitcher.switchScene;
 
@@ -15,16 +17,23 @@ public class StartWindowController {
     @FXML
     TextField loginField;
     @FXML
-    PasswordField hasloField;
+    PasswordField passwordField;
     @FXML
-    Text uwagaText;
+    Text attentionText;
 
-    public void onZalogujButtonClick(ActionEvent event) throws IOException {
-        if(loginField.getText().isBlank() || hasloField.getText().isBlank()) {
-            uwagaText.setText("Wypełnij wszystkie pola");
+    public void onZalogujButtonClick(ActionEvent event) throws IOException, SQLException, NoSuchAlgorithmException {
+        if(loginField.getText().isBlank() || passwordField.getText().isBlank()) {
+            attentionText.setText("Wypełnij wszystkie pola");
         }
         else {
-            switchScene(event, "mainMenu.fxml");
+            DBController dbController = new DBController();
+            if(dbController.login(loginField.getText(), passwordField.getText())) {
+                Account.getInstance().logIn(loginField.getText());
+                switchScene(event, "mainMenu.fxml");
+            }
+            else {
+                attentionText.setText("Niepoprawne dane logowania");
+            }
         }
     }
 

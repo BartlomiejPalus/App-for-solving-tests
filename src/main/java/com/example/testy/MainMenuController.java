@@ -23,6 +23,7 @@ public class MainMenuController {
 	}
 
 	public void onWylogujButtonClick(ActionEvent event) throws IOException {
+		Account.getInstance().logOut();
 		switchScene(event, "startWindow.fxml");
 	}
 

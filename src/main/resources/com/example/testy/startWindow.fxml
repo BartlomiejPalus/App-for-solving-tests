@@ -26,13 +26,13 @@
       </HBox>
       <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="420.0" prefWidth="900.0" spacing="20.0" VBox.vgrow="ALWAYS">
          <children>
-            <Text fx:id="uwagaText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Attention">
+            <Text fx:id="attentionText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Attention">
                <VBox.margin>
                   <Insets top="-40.0" />
                </VBox.margin>
             </Text>
             <TextField fx:id="loginField" maxWidth="150.0" promptText="Login" stylesheets="@style.css" />
-            <PasswordField fx:id="hasloField" maxHeight="30.0" maxWidth="150.0" promptText="Hasło" />
+            <PasswordField fx:id="passwordField" maxHeight="30.0" maxWidth="150.0" promptText="Hasło" />
             <Button fx:id="zalogujButton" mnemonicParsing="false" onAction="#onZalogujButtonClick" stylesheets="@style.css" text="Zaloguj" />
             <Button fx:id="rejestracjaButton" mnemonicParsing="false" onAction="#onRejestracjaButtonClick" stylesheets="@style.css" text="Rejestracja" />
          </children>

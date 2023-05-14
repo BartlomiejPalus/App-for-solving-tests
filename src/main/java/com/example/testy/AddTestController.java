@@ -163,8 +163,11 @@ public class AddTestController implements Initializable {
 	}
 
 	public void onUtworzClick(ActionEvent event) throws IOException {
-		if(checkFieldsFill() && checkParametersFill())
+		if(checkFieldsFill() && checkParametersFill()) {
+
+			System.out.println("d");
 			switchScene(event, "myTests.fxml");
+		}
 	}
 
 	public void onAnulujButtonClick(ActionEvent event) throws IOException {
