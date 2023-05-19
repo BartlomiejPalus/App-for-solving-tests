@@ -10,4 +10,12 @@ public class Answer {
 		this.content = content;
 		this.isCorrect = isCorrect;
 	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public Boolean getCorrect() {
+		return isCorrect;
+	}
 }

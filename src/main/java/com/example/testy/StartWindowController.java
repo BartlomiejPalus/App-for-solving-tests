@@ -26,9 +26,9 @@ public class StartWindowController {
             attentionText.setText("Wypełnij wszystkie pola");
         }
         else {
-            DBController dbController = new DBController();
-            if(dbController.login(loginField.getText(), passwordField.getText())) {
-                Account.getInstance().logIn(loginField.getText());
+            int id = DBController.login(loginField.getText(), passwordField.getText());
+            if(id != -1) {
+                Account.getInstance().logIn(loginField.getText(), id);
                 switchScene(event, "mainMenu.fxml");
             }
             else {

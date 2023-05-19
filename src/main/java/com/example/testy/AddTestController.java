@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -44,24 +44,22 @@ public class AddTestController implements Initializable {
 	@FXML
 	Text windowNameText ,attentionText;
 
-	private String state = "addTest";
-	private List<Question> questionsList;
+	private int testID;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		for(TestCategories t : TestCategories.values()) {
+			categoryComboBox.getItems().add(t.getText());
+		}
+		visabilityComboBox.getItems().addAll("Publiczny", "Prywatny");
+		visabilityComboBox.getSelectionModel().selectFirst();
 		addQuestion();
 	}
 
-	public void setState(String state) {
-		this.state = state;
-		if(state.equals("addTest")) {
-			windowNameText.setText("Dodaj test");
-			deleteTestButton.setVisible(false);
-		}
-		else if(state.equals("editTest")) {
-			windowNameText.setText("Edytuj test");
-			deleteTestButton.setVisible(true);
-		}
+	public void setEditState(int testID) {
+		windowNameText.setText("Edytuj test");
+		deleteTestButton.setVisible(true);
+		this.testID = testID;
 	}
 
 	public void onDodajPytanieButtonClick() {
@@ -162,10 +160,8 @@ public class AddTestController implements Initializable {
 		}
 	}
 
-	public void onUtworzClick(ActionEvent event) throws IOException {
-		if(checkFieldsFill() && checkParametersFill()) {
-
-			System.out.println("d");
+	public void onUtworzClick(ActionEvent event) throws IOException, SQLException {
+		if(addTest()) {
 			switchScene(event, "myTests.fxml");
 		}
 	}
@@ -182,7 +178,7 @@ public class AddTestController implements Initializable {
 		amountOfApproachTextField.setDisable(unlimitedCheckBox.isSelected());
 	}
 
-	public void onDeleteTestButtonClick(ActionEvent event) throws IOException {
+	public void onDeleteTestButtonClick(ActionEvent event) throws IOException, SQLException {
 		ButtonType deleteButton = new ButtonType("Usuń", ButtonBar.ButtonData.OK_DONE);
 		ButtonType cancelButton = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Operacja jest nieodwracalna", deleteButton, cancelButton);
@@ -203,6 +199,7 @@ public class AddTestController implements Initializable {
 
 		if(option.isPresent()) {
 			if (option.get() == deleteButton) {
+				DBController.deleteTest(testID);
 				switchScene(event, "myTests.fxml");
 			}
 		}
@@ -210,6 +207,67 @@ public class AddTestController implements Initializable {
 
 	public void onHelpClick() {
 
+	}
+
+	public boolean addTest() throws SQLException {
+		if(checkFieldsFill() && checkParametersFill()) {
+			String testName = testNameTextField.getText();
+			String category = categoryComboBox.getValue();
+			String amountOfQuestionsInApproach = "-1";
+			if(!allCheckBox.isSelected()) {
+				amountOfQuestionsInApproach = amountOfQuestionsInApproachTextField.getText();
+			}
+			String amountOfApproach = "-1";
+			if(!unlimitedCheckBox.isSelected()) {
+				amountOfApproach = amountOfApproachTextField.getText();
+			}
+			boolean isOverviewable = ((RadioButton) isOverviewableGroup.getSelectedToggle()).getText().equals("Tak");
+			String password = passwordTextField.getText();
+			boolean isPublic = visabilityComboBox.getValue().equals("Publiczny");
+			String creator = Account.getInstance().getLogin();
+			Test test = new Test(testName, category, Integer.parseInt(amountOfQuestionsInApproach),
+					Integer.parseInt(amountOfApproach), isOverviewable, password, isPublic, creator);
+
+			for(Node questionNode : questionsVBox.getChildren()) {
+				VBox questionVBox = (VBox) questionNode;
+				String questionContent = ((TextField)questionVBox.getChildren().get(1)).getText();
+				HBox header = (HBox) questionVBox.getChildren().get(0);
+				HBox points = (HBox) header.getChildren().get(4);
+				TextField goodAnswerPointsTextField = (TextField) points.getChildren().get(0);
+				TextField badAnswerPointsTextField = (TextField) points.getChildren().get(2);
+				String goodAnswerPoints = defaultGoodTextField.getText();
+				String badAnswerPoints = defaultBadTextField.getText();
+
+				if(!goodAnswerPointsTextField.getText().isBlank())
+					goodAnswerPoints = goodAnswerPointsTextField.getText();
+				if(!badAnswerPointsTextField.getText().isBlank())
+					badAnswerPoints = badAnswerPointsTextField.getText();
+				System.out.println(Integer.parseInt(goodAnswerPoints));
+				System.out.println(Integer.parseInt(badAnswerPoints));
+				Question question = new Question(questionContent, Integer.parseInt(goodAnswerPoints),
+						Integer.parseInt(badAnswerPoints));
+				VBox answersVBox = (VBox) questionVBox.getChildren().get(2);
+
+				for(Node answerNode : answersVBox.getChildren()) {
+					HBox hBox = (HBox) answerNode;
+					String answerContent = ((TextField) hBox.getChildren().get(2)).getText();
+					Boolean isCorrect = ((CheckBox) hBox.getChildren().get(0)).isSelected();
+					question.addAnswer(new Answer(answerContent, isCorrect));
+				}
+				test.addQuestion(question);
+			}
+			System.out.println(test.getName());
+			for (int i=0; i<test.getQuestionsList().size();i++) {
+				System.out.println(test.getQuestionsList().get(i).getContent());
+				for (int j=0;j<test.getQuestionsList().get(i).getAnswers().size();j++) {
+					System.out.println(test.getQuestionsList().get(i).getAnswers().get(j).getContent() + " "
+							+ test.getQuestionsList().get(i).getAnswers().get(j).getCorrect());
+				}
+			}
+			DBController.addTest(test);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean checkFieldsFill() {
@@ -265,16 +323,24 @@ public class AddTestController implements Initializable {
 			attentionText.setText("Wprowadź nazwę testu");
 			return false;
 		}
+		if(categoryComboBox.getValue() == null) {
+			attentionText.setText("Wybierz kategorię testu");
+			return false;
+		}
 		if(!allCheckBox.isSelected() && amountOfQuestionsInApproachTextField.getText().isBlank()) {
 			attentionText.setText("Wprowadź ilość pytań w podejściu");
+			return false;
+		}
+		if(!allCheckBox.isSelected() && !amountOfQuestionsInApproachTextField.getText().isBlank()
+				&& Integer.parseInt(amountOfQuestionsInApproachTextField.getText()) > questionsVBox.getChildren().size()) {
+			attentionText.setText("Ilość pytań w podejściu nie może być większa niż ilość pytań w teście");
 			return false;
 		}
 		if(!unlimitedCheckBox.isSelected() && amountOfApproachTextField.getText().isBlank()) {
 			attentionText.setText("Wprowadź ilość podejść do testu");
 			return false;
 		}
-		//RadioButton t = (RadioButton)isOverviewableGroup.getSelectedToggle();
-		//System.out.println(t.getText());
+
 		return true;
 	}
 }

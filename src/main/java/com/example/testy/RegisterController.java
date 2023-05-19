@@ -29,8 +29,8 @@ public class RegisterController {
 			attentionText.setText("Hasła nie są takie same");
 		}
 		else{
-			DBController dbController = new DBController();
-			if(dbController.register(loginField.getText(), passwordField.getText())) {
+			if(DBController.register(loginField.getText(), passwordField.getText())) {
+				Account.getInstance().logIn("", 1);
 				switchScene(event, "mainMenu.fxml");
 				return;
 			}

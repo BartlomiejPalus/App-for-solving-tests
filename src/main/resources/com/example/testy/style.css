@@ -114,7 +114,6 @@ Pane {
 
 .TloWiersza {
     -fx-background-color: #2f2f2f;
-    -fx-pref-height: 150;
     -fx-background-radius: 18;
     -fx-padding: 10;
 }
@@ -130,7 +129,7 @@ Pane {
 	-fx-background-radius: 18;
 }
 
-.SzczegolyTestuText {
+#vBoxSzczegoly > Text {
 	-fx-font: 20px "calibiri";
 	-fx-font-weight: bold;
 }

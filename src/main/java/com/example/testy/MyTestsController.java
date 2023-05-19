@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import static com.example.testy.SceneSwitcher.switchScene;
@@ -35,25 +37,39 @@ public class MyTestsController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		kategorieComboBox.getItems().addAll("Wszystkie", "Matematyka", "Fizyka");
 		kategorieComboBox.getSelectionModel().selectFirst();
+		try {
+			drawListOfMyTests();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-		for(int i=0; i<7; i++) {
+	public void drawListOfMyTests() throws SQLException {
+		ResultSet resultSet = DBController.getListOfTests("creatorID = " + Account.getInstance().getId());
+
+		while(resultSet.next()) {
 			VBox vBox = new VBox();
 			vBox.getStyleClass().add("TloWiersza");
 			vBox.setSpacing(10);
 			vBox.setPadding(new Insets(15));
 
-			Text title = new Text("Przykładowy test " + (i + 1));
+			Text title = new Text(resultSet.getString("name"));
 			title.getStyleClass().add("TestNazwaLista");
 			vBox.getChildren().add(title);
 
 			HBox hBox = new HBox();
 			hBox.setSpacing(10);
-			Text text1 = new Text("Kategoria: " + "Matematyka" + ", Liczba pytań: " + 10);
+			Text text1 = new Text("Kategoria: " + resultSet.getString("category") + ", Liczba pytań: " +
+					resultSet.getInt("amountOfQuestionsInApproach"));
+			if(resultSet.getInt("amountOfQuestionsInApproach") == -1) {
+				text1.setText("Kategoria: " + resultSet.getString("category") + ", Liczba pytań: " +
+						resultSet.getInt("totalQuestionsAmount"));
+			}
 			Button resultsButton = new Button("Wyniki");
 			resultsButton.getStyleClass().add("ListButton");
 			Button editButton = new Button("Edytuj");
 			editButton.getStyleClass().add("ListButton");
-			editButton.setUserData(i);
+			editButton.setUserData(resultSet.getInt("id"));
 
 			resultsButton.setOnAction(e -> {
 				try {
@@ -67,7 +83,7 @@ public class MyTestsController implements Initializable {
 				try {
 					FXMLLoader loader = switchScene(e, "addTest.fxml");
 					AddTestController controller = loader.getController();
-					controller.setState("editTest");
+					controller.setEditState((int) editButton.getUserData());
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
@@ -99,7 +115,6 @@ public class MyTestsController implements Initializable {
 	public void onDodajTestButtonClick(ActionEvent event) throws IOException {
 		FXMLLoader loader = switchScene(event, "addTest.fxml");
 		AddTestController controller = loader.getController();
-		controller.setState("addTest");
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {
