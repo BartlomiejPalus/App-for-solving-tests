@@ -2,7 +2,7 @@ package com.example.testy;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -13,63 +13,60 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static com.example.testy.SceneSwitcher.switchScene;
 
-public class FillTestController implements Initializable {
+public class FillTestController {
 
 	@FXML
 	Text nazwaTestuText;
 	@FXML
 	VBox listaPytanVBox;
-	int testID;
+	String testName;
+	int testID, amountOfQuestions;
 
-	public void setTestID(int testID) {
+	public void prepareTest(int testID, String testName, int amountOfQuestions) throws SQLException {
+		this.testName = testName;
 		this.testID = testID;
+		this.amountOfQuestions = amountOfQuestions;
+		nazwaTestuText.setText(testName);
+		drawQuestion(testID);
 	}
 
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {
-		nazwaTestuText.setText(String.valueOf(testID));
-
-		for (int i=0; i<5; i++) {
+	public void drawQuestion(int testID) throws SQLException {
+		ResultSet resultSet = DBController.getQuestionsForTest(testID, amountOfQuestions);
+		int i = 0;
+		while(resultSet.next()) {
+			i++;
 			VBox vBox = new VBox();
 			vBox.getStyleClass().add("TloWiersza");
 
-			Text questionNumber = new Text("Pytanie "+(i+1));
+			Text questionNumber = new Text("Pytanie " + i);
 			questionNumber.getStyleClass().add("NumerPytania");
 
 			HBox hBox = new HBox(questionNumber);
 			hBox.setAlignment(Pos.CENTER);
 
-			Text questionContent = new Text("Tresc pytania");
+			Text questionContent = new Text(resultSet.getString("content"));
 			questionContent.getStyleClass().add("TrescPytania");
 
-			VBox answersVBox = new VBox();
-			answersVBox.setSpacing(5);
-
-			ToggleGroup group = new ToggleGroup();
-
-			RadioButton answerRadio1 = new RadioButton("1");
-			RadioButton answerRadio2 = new RadioButton("2");
-			answerRadio1.setToggleGroup(group);
-			answerRadio2.setToggleGroup(group);
-
-			RadioButton answerRadio3 = new RadioButton("3");
-			answerRadio3.setToggleGroup(group);
-
-			RadioButton answerRadio4 = new RadioButton("4");
-			answerRadio4.setToggleGroup(group);
-
-			answersVBox.getChildren().addAll(answerRadio1, answerRadio2, answerRadio3, answerRadio4);
-
-			vBox.getChildren().addAll(hBox, questionContent, answersVBox);
+			vBox.getChildren().addAll(hBox, questionContent, drawAnswer(resultSet.getInt("id")));
 			listaPytanVBox.getChildren().add(vBox);
 		}
+	}
+
+	private VBox drawAnswer(int questionID) throws SQLException {
+		ResultSet resultSet = DBController.getAnswersOfQuestion(questionID);
+		VBox answersVBox = new VBox();
+		answersVBox.setSpacing(5);
+		while (resultSet.next()) {
+			answersVBox.getChildren().add(new CheckBox(resultSet.getString("content")));
+		}
+		return answersVBox;
 	}
 
 	public void onZakonczButtonClick(ActionEvent event) throws IOException {
@@ -93,7 +90,9 @@ public class FillTestController implements Initializable {
 
 		if(option.isPresent()) {
 			if (option.get() == deleteButton) {
-				switchScene(event, "testResult.fxml");
+				FXMLLoader fxmlLoader = switchScene(event, "testResult.fxml");
+				TestResultController controller =fxmlLoader.getController();
+				controller.fillData(testID, testName, amountOfQuestions);
 			}
 		}
 	}

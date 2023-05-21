@@ -35,18 +35,19 @@ public class MyTestsController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		kategorieComboBox.getItems().addAll("Wszystkie", "Matematyka", "Fizyka");
+		kategorieComboBox.getItems().addAll("Wszystkie");
+		for(TestCategories t : TestCategories.values()) {
+			kategorieComboBox.getItems().add(t.getText());
+		}
 		kategorieComboBox.getSelectionModel().selectFirst();
 		try {
-			drawListOfMyTests();
+			drawListOfMyTests(DBController.getListOfTests("creatorID = " + Account.getInstance().getId()));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void drawListOfMyTests() throws SQLException {
-		ResultSet resultSet = DBController.getListOfTests("creatorID = " + Account.getInstance().getId());
-
+	public void drawListOfMyTests(ResultSet resultSet) throws SQLException {
 		while(resultSet.next()) {
 			VBox vBox = new VBox();
 			vBox.getStyleClass().add("TloWiersza");
@@ -83,8 +84,8 @@ public class MyTestsController implements Initializable {
 				try {
 					FXMLLoader loader = switchScene(e, "addTest.fxml");
 					AddTestController controller = loader.getController();
-					controller.setEditState((int) editButton.getUserData());
-				} catch (IOException ex) {
+					controller.setState("edit", (int) editButton.getUserData());
+				} catch (IOException | SQLException ex) {
 					throw new RuntimeException(ex);
 				}
 			});
@@ -100,21 +101,36 @@ public class MyTestsController implements Initializable {
 		}
 	}
 
-	public void onFiltrujButtonClick(){
+	public void onFiltrujButtonClick() throws SQLException {
+		String condition = "creatorID = " + Account.getInstance().getId();
 
+		if (!nazwaTestuTextField.getText().isBlank()) {
+			condition += " AND name LIKE \"%" + nazwaTestuTextField.getText() + "%\"";
+		}
+
+		if (kategorieComboBox.getValue() != null && !kategorieComboBox.getValue().equals("Wszystkie")) {
+			condition += " AND category = \"" + kategorieComboBox.getValue() + "\"";
+		}
+
+		listaTestowVBox.getChildren().clear();
+		drawListOfMyTests(DBController.getListOfTests(condition));
 	}
 
-	public void onResetujButtonClick(){
+	public void onResetujButtonClick() throws SQLException {
 		nazwaTestuTextField.setText("");
 		kategorieComboBox.getSelectionModel().selectFirst();
 		iloscPytanComboBox.getSelectionModel().selectFirst();
 		iloscPodejscComboBox.getSelectionModel().selectFirst();
 		widocznoscComboBox.getSelectionModel().selectFirst();
+
+		listaTestowVBox.getChildren().clear();
+		drawListOfMyTests(DBController.getListOfTests(null));
 	}
 
-	public void onDodajTestButtonClick(ActionEvent event) throws IOException {
-		FXMLLoader loader = switchScene(event, "addTest.fxml");
-		AddTestController controller = loader.getController();
+	public void onDodajTestButtonClick(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader fxmlLoader = switchScene(event, "addTest.fxml");
+		AddTestController controller = fxmlLoader.getController();
+		controller.setState("addTest", -1);
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {

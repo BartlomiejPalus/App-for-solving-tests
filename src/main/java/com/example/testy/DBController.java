@@ -61,8 +61,8 @@ public class DBController {
 		return false;
 	}
 
-	public static void addTest(Test test) throws SQLException {
-		connect();//todo
+	public static void addTest(Test test, int testID) throws SQLException {
+		connect();
 		String query = "INSERT INTO test (name, category, amountOfQuestionsInApproach, amountOfApproach, isOverviewable," +
 				"password, isPublic, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -78,6 +78,30 @@ public class DBController {
 		statement.executeUpdate();
 		ResultSet resultSet = statement.getGeneratedKeys();
 		resultSet.next();
+
+		if (testID == -1) {
+			query = "UPDATE test SET originalID = id WHERE id = ?";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, resultSet.getInt(1));
+		}
+		else {
+			query = "UPDATE test SET wasEdited = 1 WHERE id = ?";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, testID);
+			statement.executeUpdate();
+
+			query = "SELECT originalID FROM test WHERE id = ?";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, testID);
+			ResultSet originalID = statement.executeQuery();
+			originalID.next();
+
+			query = "UPDATE test SET originalID = ? WHERE id = ?";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, originalID.getInt("originalID"));
+			statement.setInt(2, resultSet.getInt(1));
+		}
+		statement.executeUpdate();
 
 		addQuestions(resultSet.getInt(1), test.getQuestionsList());
 	}
@@ -109,19 +133,26 @@ public class DBController {
 	}
 
 	public static void deleteTest(int testID) throws SQLException {
-		String query = "DELETE FROM test WHERE id = ?";
+		String query = "SELECT originalID FROM test WHERE id = ?";
 		statement = connection.prepareStatement(query);
 		statement.setInt(1, testID);
+		ResultSet resultSet = statement.executeQuery();
+		resultSet.next();
+
+		query = "DELETE FROM test WHERE originalID = ?";
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, resultSet.getInt("originalID"));
 		statement.execute();
 	}
 
 	public static ResultSet getListOfTests(String condition) throws SQLException {
 		connect();
 		String query = "SELECT id, name, category, amountOfQuestionsInApproach, (SELECT COUNT(*) FROM question WHERE" +
-				" testID = test.id) as totalQuestionsAmount FROM test";
+				" testID = test.id) as totalQuestionsAmount FROM test WHERE wasEdited = 0";
 		if(condition != null && !condition.isBlank()) {
-			query += " WHERE " + condition;
+			query += " AND " + condition;
 		}
+		System.out.println(query);
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
 	}
@@ -131,6 +162,38 @@ public class DBController {
 		String query = "SELECT id, name, category, amountOfQuestionsInApproach, (SELECT COUNT(*) FROM question WHERE testID = " +
 				testID + ") as totalQuestionsAmount, amountOfApproach, isPublic, (SELECT login FROM login_data WHERE " +
 				"id = (SELECT creatorID FROM test WHERE id = " + testID + ")) as creator FROM test WHERE id = " + testID;
+		statement = connection.prepareStatement(query);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getQuestionsForTest(int testID, int amountOfQuestions) throws SQLException {
+		connect();
+		String query = "SELECT id, content FROM question WHERE testID = " + testID + " ORDER BY RAND()";
+		if(amountOfQuestions != -1) {
+			query += " LIMIT " + amountOfQuestions;
+		}
+		statement = connection.prepareStatement(query);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getQuestionsForEdit(int testID) throws SQLException {
+		connect();
+		String query = "SELECT id, content, pointsForGood, pointsForBad FROM question WHERE testID = " + testID;
+		statement = connection.prepareStatement(query);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getAnswersOfQuestion(int questionID) throws SQLException {
+		connect();
+		String query = "SELECT content, isTrue FROM answer WHERE questionID = " + questionID;
+		statement = connection.prepareStatement(query);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getTestProperties(int testID) throws SQLException {
+		connect();
+		String query = "SELECT name, category, amountOfQuestionsInApproach, amountOfApproach, isOverviewable," +
+				" password, isPublic FROM test WHERE id = " + testID;
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
 	}

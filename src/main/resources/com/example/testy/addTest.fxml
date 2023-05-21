@@ -134,7 +134,7 @@
                         <Text fx:id="attentionText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Attention" textAlignment="CENTER" wrappingWidth="250.0" />
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" onAction="#onUtworzClick" text="Utwórz">
+                  <Button fx:id="createButton" mnemonicParsing="false" onAction="#onUtworzClick" text="Utwórz">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

@@ -55,7 +55,7 @@
                <children>
                   <GridPane>
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.199951171875" minWidth="10.0" prefWidth="89.599951171875" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.199951171875" minWidth="10.0" prefWidth="95.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -86,7 +86,7 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość podejść:" GridPane.rowIndex="3" />
                         <ComboBox fx:id="iloscPodejscComboBox" prefHeight="30.0" prefWidth="200.0" promptText="Wszystkie" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <ComboBox fx:id="widocznoscComboBox" prefHeight="30.0" prefWidth="200.0" promptText="Wszystkie" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Widoczność:" GridPane.rowIndex="4" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Właściciel:" GridPane.rowIndex="4" />
                      </children>
                      <VBox.margin>
                         <Insets />

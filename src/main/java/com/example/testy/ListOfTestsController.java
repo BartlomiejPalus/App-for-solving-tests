@@ -33,14 +33,15 @@ public class ListOfTestsController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		kategorieComboBox.getItems().add("Wszystkie");
 		for(TestCategories t : TestCategories.values()) {
 			kategorieComboBox.getItems().add(t.getText());
 		}
 
-		iloscPytanComboBox.getItems().addAll("Wszystkie", "1-10", "10-20", "20-30", "30+");
+		iloscPytanComboBox.getItems().addAll("Wszystkie", "1-10", "11-20", "21-30", "30+");
 		iloscPytanComboBox.getSelectionModel().selectFirst();
 
-		iloscPodejscComboBox.getItems().addAll("Wszystkie", "Jedno", "Nieograniczone");
+		iloscPodejscComboBox.getItems().addAll("Wszystkie", "Ograniczona", "Nieograniczona");
 		iloscPodejscComboBox.getSelectionModel().selectFirst();
 
 		widocznoscComboBox.getItems().addAll("Wszystkie", "Testy innych", "Moje testy");
@@ -95,16 +96,55 @@ public class ListOfTestsController implements Initializable {
 		}
 	}
 
-	public void onFiltrujButtonClick(){
+	public void onFiltrujButtonClick() throws SQLException {
+		String condition = "name LIKE \"%" + nazwaTestuTextField.getText() + "%\"";
 
+		if (kategorieComboBox.getValue() != null && !kategorieComboBox.getValue().equals("Wszystkie")) {
+			condition += " AND category = \"" + kategorieComboBox.getValue() + "\"";
+		}
+
+		if (iloscPytanComboBox.getValue() != null && !iloscPytanComboBox.getValue().equals("Wszystkie")) {
+			switch(iloscPytanComboBox.getValue()){
+				case "1-10" -> condition += " AND (amountOfQuestionsInApproach BETWEEN 1 AND 10 " +
+						"OR (amountOfQuestionsInApproach = -1 AND " +
+						"(SELECT COUNT(*) FROM question WHERE testID = test.id) BETWEEN 1 AND 10))";
+				case "11-20" -> condition += " AND (amountOfQuestionsInApproach BETWEEN 11 AND 20 " +
+						"OR (amountOfQuestionsInApproach = -1 AND " +
+						"(SELECT COUNT(*) FROM question WHERE testID = test.id) BETWEEN 11 AND 20))";
+				case "21-30" -> condition += " AND (amountOfQuestionsInApproach BETWEEN 21 AND 30 " +
+						"OR (amountOfQuestionsInApproach = -1 AND " +
+						"(SELECT COUNT(*) FROM question WHERE testID = test.id) BETWEEN 21 AND 30))";
+				case "30+" -> condition += " AND (amountOfQuestionsInApproach > 30 " +
+						"OR (amountOfQuestionsInApproach = -1 AND " +
+						"(SELECT COUNT(*) FROM question WHERE testID = test.id) > 30))";
+			}
+		}
+
+		if (iloscPodejscComboBox.getValue().equals("Ograniczona")) {
+			condition += " AND amountOfApproach != -1";
+		} else if (iloscPodejscComboBox.getValue().equals("Nieograniczona")) {
+			condition += " AND amountOfApproach = -1";
+		}
+
+		if (widocznoscComboBox.getValue().equals("Testy innych")) {
+			condition += " AND creatorID != " + Account.getInstance().getId();
+		} else if (widocznoscComboBox.getValue().equals("Moje testy")) {
+			condition += " AND creatorID = " + Account.getInstance().getId();
+		}
+
+		listaTestowVBox.getChildren().clear();
+		drawListOfTests(DBController.getListOfTests(condition));
 	}
 
-	public void onResetujButtonClick(){
+	public void onResetujButtonClick() throws SQLException {
 		nazwaTestuTextField.setText("");
 		kategorieComboBox.getSelectionModel().selectFirst();
 		iloscPytanComboBox.getSelectionModel().selectFirst();
 		iloscPodejscComboBox.getSelectionModel().selectFirst();
 		widocznoscComboBox.getSelectionModel().selectFirst();
+
+		listaTestowVBox.getChildren().clear();
+		drawListOfTests(DBController.getListOfTests(null));
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {

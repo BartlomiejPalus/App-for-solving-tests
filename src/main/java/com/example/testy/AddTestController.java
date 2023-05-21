@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class AddTestController implements Initializable {
 	@FXML
 	ToggleGroup isOverviewableGroup;
 	@FXML
-	Button deleteTestButton;
+	Button createButton, deleteTestButton;
 	@FXML
 	Text windowNameText ,attentionText;
 
@@ -53,20 +54,61 @@ public class AddTestController implements Initializable {
 		}
 		visabilityComboBox.getItems().addAll("Publiczny", "Prywatny");
 		visabilityComboBox.getSelectionModel().selectFirst();
-		addQuestion();
 	}
 
-	public void setEditState(int testID) {
-		windowNameText.setText("Edytuj test");
-		deleteTestButton.setVisible(true);
+	public void setState(String state, int testID) throws SQLException {
 		this.testID = testID;
+		if(state.equals("addTest")) {
+			addQuestion(null);
+		}
+		else {
+			windowNameText.setText("Edytuj test");
+			createButton.setText("Edytuj");
+			deleteTestButton.setVisible(true);
+
+			ResultSet resultSet = DBController.getTestProperties(testID);
+			resultSet.next();
+			setTestProperties(resultSet);
+
+			resultSet = DBController.getQuestionsForEdit(testID);
+			while (resultSet.next()) {
+				addQuestion(resultSet);
+			}
+		}
 	}
 
-	public void onDodajPytanieButtonClick() {
-		addQuestion();
+	public void setTestProperties(ResultSet resultSet) throws SQLException {
+		testNameTextField.setText(resultSet.getString("name"));
+		categoryComboBox.setValue(resultSet.getString("category"));
+
+		if(resultSet.getInt("amountOfQuestionsInApproach") != -1) {
+			allCheckBox.setSelected(false);
+			amountOfQuestionsInApproachTextField.setDisable(false);
+			amountOfQuestionsInApproachTextField.setText(resultSet.getString("amountOfQuestionsInApproach"));
+		}
+
+		if(resultSet.getInt("amountOfApproach") != -1) {
+			unlimitedCheckBox.setSelected(false);
+			amountOfApproachTextField.setDisable(false);
+			amountOfApproachTextField.setText(resultSet.getString("amountOfApproach"));
+		}
+
+		if(!resultSet.getBoolean("isOverviewable")) {
+			isNotOverviewableRadio.setSelected(true);
+		}
+
+		passwordTextField.setText(resultSet.getString("password"));
+
+		if(!resultSet.getBoolean("isPublic")) {
+			visabilityComboBox.getSelectionModel().selectLast();
+		}
 	}
 
-	public void addQuestion() {
+	public void onDodajPytanieButtonClick() throws SQLException {
+		addQuestion(null);
+	}
+
+	public void addQuestion(ResultSet resultSet) throws SQLException {
 		VBox questionVBox = new VBox();
 		questionVBox.setSpacing(10);
 		questionVBox.getStyleClass().add("TloWiersza");
@@ -101,15 +143,35 @@ public class AddTestController implements Initializable {
 		HBox.setHgrow(r2, Priority.ALWAYS);
 		r1.setPadding(new Insets(0,100,0, 0));
 		TextField questionContent = new TextField();
+
 		questionContent.setPromptText("Treść pytania");
 		questionVBox.getChildren().add(questionContent);
 
 		VBox answersVBox = new VBox();
 		answersVBox.setSpacing(5);
-		addAnswer(answersVBox);
+
+		if(resultSet != null) {
+			questionContent.setText(resultSet.getString("content"));
+			goodAnswer.setText(resultSet.getString("pointsForGood"));
+			badAnswer.setText(String.valueOf(resultSet.getInt("pointsForBad")));
+
+			resultSet = DBController.getAnswersOfQuestion(resultSet.getInt("id"));
+			while(resultSet.next()) {
+				addAnswer(answersVBox, resultSet);
+			}
+		}
+		else {
+			addAnswer(answersVBox, null);
+		}
 
 		Button addAnswerButton = new Button("Dodaj odpowiedź");
-		addAnswerButton.setOnAction(e -> addAnswer(answersVBox));
+		addAnswerButton.setOnAction(e -> {
+			try {
+				addAnswer(answersVBox, null);
+			} catch (SQLException ex) {
+				throw new RuntimeException(ex);
+			}
+		});
 
 		deleteQuestionButton.setOnAction(e -> {
 			questionsVBox.getChildren().remove(questionVBox);
@@ -122,22 +184,31 @@ public class AddTestController implements Initializable {
 		updateQuestionNumbering();
 	}
 
-	public void addAnswer(VBox answersVBox) {
+	public void addAnswer(VBox answersVBox, ResultSet resultSet) throws SQLException {
 		HBox answersHBox = new HBox();
 		answersHBox.setAlignment(Pos.CENTER_LEFT);
 		answersHBox.setSpacing(10);
 
-		TextField textField = new TextField();
-		textField.setPromptText("Wprowadź odpowiedź");
+		CheckBox checkBox = new CheckBox();
+
+		TextField contentTextField = new TextField();
+		contentTextField.setPromptText("Wprowadź odpowiedź");
 
 		Button deleteAnswerButton = new Button("-");
 		deleteAnswerButton.getStyleClass().add("Usun");
+
+		if(resultSet != null) {
+			contentTextField.setText(resultSet.getString("content"));
+			if(resultSet.getBoolean("isTrue")) {
+				checkBox.setSelected(true);
+			}
+		}
 
 		deleteAnswerButton.setOnAction(e -> {
 			answersVBox.getChildren().remove(answersHBox);
 			updateAnswerNumbering(answersVBox);
 		});
-		answersHBox.getChildren().addAll(new CheckBox(), new Text((answersVBox.getChildren().size()+1) + "."), textField, deleteAnswerButton);
+		answersHBox.getChildren().addAll(checkBox, new Text((answersVBox.getChildren().size()+1) + "."), contentTextField, deleteAnswerButton);
 		answersVBox.getChildren().add(answersHBox);
 	}
 
@@ -264,7 +335,7 @@ public class AddTestController implements Initializable {
 							+ test.getQuestionsList().get(i).getAnswers().get(j).getCorrect());
 				}
 			}
-			DBController.addTest(test);
+			DBController.addTest(test, testID);
 			return true;
 		}
 		return false;
@@ -340,7 +411,6 @@ public class AddTestController implements Initializable {
 			attentionText.setText("Wprowadź ilość podejść do testu");
 			return false;
 		}
-
 		return true;
 	}
 }

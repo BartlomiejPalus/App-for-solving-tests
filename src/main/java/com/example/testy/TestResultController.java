@@ -2,23 +2,19 @@ package com.example.testy;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import static com.example.testy.SceneSwitcher.switchScene;
 
-public class TestResultController implements Initializable {
+public class TestResultController {
 
 	@FXML
-	Text wynikText;
+	Text wynikText, nazwaTestuText;
 
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {
-
+	public void fillData(int testID, String testName, int amountOfQuestionsInApproach) {
+		nazwaTestuText.setText(testName);
 	}
 
 	public void onPokazOdpowiedziButtonClick(ActionEvent event) throws IOException {

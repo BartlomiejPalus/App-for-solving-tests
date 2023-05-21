@@ -3,33 +3,25 @@ package com.example.testy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.example.testy.DBController.getTestDetails;
-import static com.example.testy.DBController.register;
 import static com.example.testy.SceneSwitcher.switchScene;
 
 public class TestDetailsController {
-
-	private Stage stage;
-	private Scene scene;
-	private Parent root;
 
 	@FXML
 	Text nazwaTestuText;
 	@FXML
 	VBox vBoxSzczegoly;
 
-	private int testID;
+	private int testID, amountOfQuestionsInApproach;
+	private String testName;
 
 	public void printDetails(int testID) {
 		this.testID = testID;
@@ -37,10 +29,11 @@ public class TestDetailsController {
 		try {
 			ResultSet resultSet = getTestDetails(testID);
 			resultSet.next();
-
-			nazwaTestuText.setText(resultSet.getString("name"));
+			testName = resultSet.getString("name");
+			nazwaTestuText.setText(testName);
 			Text category = new Text("Kategoria: " + resultSet.getString("category"));
-			Text questionsAmount = new Text("Ilość pytań w podejściu: " + resultSet.getInt("amountOfQuestionsInApproach"));
+			amountOfQuestionsInApproach = resultSet.getInt("amountOfQuestionsInApproach");
+			Text questionsAmount = new Text("Ilość pytań w podejściu: " + amountOfQuestionsInApproach);
 			if(resultSet.getInt("amountOfQuestionsInApproach") == -1) {
 				questionsAmount.setText("Ilość pytań w podejściu: " + resultSet.getInt("totalQuestionsAmount"));
 			}
@@ -61,18 +54,10 @@ public class TestDetailsController {
 		}
 	}
 
-	public void onWypelnijTestButtonClick(ActionEvent event) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fillTest.fxml"));
-		root = fxmlLoader.load();
-		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		double width = ((Node) event.getSource()).getScene().getWidth();
-		double height = ((Node) event.getSource()).getScene().getHeight();
-		scene = new Scene(root, width, height);
-		stage.setScene(scene);
-
+	public void onWypelnijTestButtonClick(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader fxmlLoader = switchScene(event, "fillTest.fxml");
 		FillTestController controller = fxmlLoader.getController();
-		controller.setTestID(testID);
-		stage.show();
+		controller.prepareTest(testID, testName, amountOfQuestionsInApproach);
 	}
 
 	public void onHistoriaTestuButtonClick(ActionEvent event) throws IOException {
