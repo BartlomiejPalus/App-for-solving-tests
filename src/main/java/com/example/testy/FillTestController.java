@@ -23,17 +23,17 @@ import static com.example.testy.SceneSwitcher.switchScene;
 public class FillTestController {
 
 	@FXML
-	Text nazwaTestuText;
+	Text testNameText;
 	@FXML
-	VBox listaPytanVBox;
+	VBox questionsVBox;
 	String testName;
-	int testID, amountOfQuestions;
+	int testID, amountOfQuestions, maxScore = 0;
 
 	public void prepareTest(int testID, String testName, int amountOfQuestions) throws SQLException {
 		this.testName = testName;
 		this.testID = testID;
 		this.amountOfQuestions = amountOfQuestions;
-		nazwaTestuText.setText(testName);
+		testNameText.setText(testName);
 		drawQuestion(testID);
 	}
 
@@ -54,8 +54,12 @@ public class FillTestController {
 			Text questionContent = new Text(resultSet.getString("content"));
 			questionContent.getStyleClass().add("TrescPytania");
 
-			vBox.getChildren().addAll(hBox, questionContent, drawAnswer(resultSet.getInt("id")));
-			listaPytanVBox.getChildren().add(vBox);
+			VBox answersVBox = drawAnswer(resultSet.getInt("id"));
+			answersVBox.setUserData(new QuestionPoints(resultSet.getInt("pointsForGood"),
+					resultSet.getInt("pointsForBad")));
+
+			vBox.getChildren().addAll(hBox, questionContent, answersVBox);
+			questionsVBox.getChildren().add(vBox);
 		}
 	}
 
@@ -63,16 +67,19 @@ public class FillTestController {
 		ResultSet resultSet = DBController.getAnswersOfQuestion(questionID);
 		VBox answersVBox = new VBox();
 		answersVBox.setSpacing(5);
+		CheckBox checkBox;
 		while (resultSet.next()) {
-			answersVBox.getChildren().add(new CheckBox(resultSet.getString("content")));
+			checkBox = new CheckBox(resultSet.getString("content"));
+			checkBox.setUserData(resultSet.getBoolean("isTrue"));
+			answersVBox.getChildren().add(checkBox);
 		}
 		return answersVBox;
 	}
 
 	public void onZakonczButtonClick(ActionEvent event) throws IOException {
-		ButtonType deleteButton = new ButtonType("Zakończ", ButtonBar.ButtonData.OK_DONE);
+		ButtonType finishButton = new ButtonType("Zakończ", ButtonBar.ButtonData.OK_DONE);
 		ButtonType cancelButton = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", deleteButton, cancelButton);
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", finishButton, cancelButton);
 
 		alert.setTitle("Zakończ test");
 		alert.setHeaderText("Czy na pewno chcesz zakończyć test?");
@@ -83,17 +90,52 @@ public class FillTestController {
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("icons/appIcon.png")).openStream()));
 
-		Node discardButton = alert.getDialogPane().lookupButton(deleteButton);
+		Node discardButton = alert.getDialogPane().lookupButton(finishButton);
 		discardButton.getStyleClass().add("AlertRedButton");
 
 		Optional<ButtonType> option = alert.showAndWait();
 
 		if(option.isPresent()) {
-			if (option.get() == deleteButton) {
+			if (option.get() == finishButton) {
 				FXMLLoader fxmlLoader = switchScene(event, "testResult.fxml");
 				TestResultController controller =fxmlLoader.getController();
-				controller.fillData(testID, testName, amountOfQuestions);
+				int score = calculateScore();
+				controller.fillData(testID, testName, score, maxScore);
 			}
 		}
+	}
+
+	public int calculateScore() {
+		int score = 0;
+
+		for(int i=0; i<questionsVBox.getChildren().size(); i++) {
+			VBox question = (VBox) questionsVBox.getChildren().get(i);
+			VBox answers = (VBox) question.getChildren().get(2);
+			QuestionPoints questionPoints = (QuestionPoints) answers.getUserData();
+			maxScore += questionPoints.getPointsForGoodAnswer();
+			int userAnswer = 0;
+			boolean allGoodChecked = true;
+			for(int j=0; j<answers.getChildren().size(); j++) {
+				CheckBox checkBox = (CheckBox) answers.getChildren().get(j);
+
+				if(checkBox.isSelected() && !((Boolean) checkBox.getUserData())) {
+					userAnswer = -1;
+					break;
+				}
+				else if(checkBox.isSelected() && ((Boolean) checkBox.getUserData())) {
+					userAnswer = 1;
+				}
+				else if(!checkBox.isSelected() && (Boolean) checkBox.getUserData()) {
+					allGoodChecked = false;
+				}
+			}
+			if(userAnswer == -1 || (userAnswer == 1 && !allGoodChecked)) {
+				score += questionPoints.getPointsForBadAnswer();
+			}
+			else if (userAnswer == 1) {
+				score += questionPoints.getPointsForGoodAnswer();
+			}
+		}
+		return score;
 	}
 }

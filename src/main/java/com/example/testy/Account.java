@@ -3,7 +3,7 @@ package com.example.testy;
 public final class Account {
     private static Account account;
     private String login;
-    private int id = 7;
+    private int id = 1;
 
     public synchronized static Account getInstance(){
         if(account == null){

@@ -168,7 +168,8 @@ public class DBController {
 
 	public static ResultSet getQuestionsForTest(int testID, int amountOfQuestions) throws SQLException {
 		connect();
-		String query = "SELECT id, content FROM question WHERE testID = " + testID + " ORDER BY RAND()";
+		String query = "SELECT id, content, pointsForGood, pointsForBad FROM question WHERE testID = " + testID +
+				" ORDER BY RAND()";
 		if(amountOfQuestions != -1) {
 			query += " LIMIT " + amountOfQuestions;
 		}
