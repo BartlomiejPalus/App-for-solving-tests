@@ -295,9 +295,8 @@ public class AddTestController implements Initializable {
 			boolean isOverviewable = ((RadioButton) isOverviewableGroup.getSelectedToggle()).getText().equals("Tak");
 			String password = passwordTextField.getText();
 			boolean isPublic = visabilityComboBox.getValue().equals("Publiczny");
-			String creator = Account.getInstance().getLogin();
 			Test test = new Test(testName, category, Integer.parseInt(amountOfQuestionsInApproach),
-					Integer.parseInt(amountOfApproach), isOverviewable, password, isPublic, creator);
+					Integer.parseInt(amountOfApproach), isOverviewable, password, isPublic);
 
 			for(Node questionNode : questionsVBox.getChildren()) {
 				VBox questionVBox = (VBox) questionNode;

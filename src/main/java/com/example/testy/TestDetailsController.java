@@ -3,6 +3,7 @@ package com.example.testy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -16,9 +17,11 @@ import static com.example.testy.SceneSwitcher.switchScene;
 public class TestDetailsController {
 
 	@FXML
-	Text nazwaTestuText;
+	Text testNameText, attentionText;
 	@FXML
-	VBox vBoxSzczegoly;
+	VBox vBoxDetails;
+	@FXML
+	PasswordField testPasswordField;
 
 	private int testID, amountOfQuestionsInApproach;
 	private String testName;
@@ -30,7 +33,7 @@ public class TestDetailsController {
 			ResultSet resultSet = getTestDetails(testID);
 			resultSet.next();
 			testName = resultSet.getString("name");
-			nazwaTestuText.setText(testName);
+			testNameText.setText(testName);
 			Text category = new Text("Kategoria: " + resultSet.getString("category"));
 			amountOfQuestionsInApproach = resultSet.getInt("amountOfQuestionsInApproach");
 			Text questionsAmount = new Text("Ilość pytań w podejściu: " + amountOfQuestionsInApproach);
@@ -48,16 +51,31 @@ public class TestDetailsController {
 			}
 			Text creator = new Text("Twórca: " + resultSet.getString("creator"));
 
-			vBoxSzczegoly.getChildren().addAll(category, questionsAmount, totalQuestionsAmount, isRepeatable, visability, creator);
+			vBoxDetails.getChildren().addAll(category, questionsAmount, totalQuestionsAmount, isRepeatable, visability, creator);
+			if(resultSet.getBoolean("hasPassword")) {
+				testPasswordField.setVisible(true);
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public void onWypelnijTestButtonClick(ActionEvent event) throws IOException, SQLException {
-		FXMLLoader fxmlLoader = switchScene(event, "fillTest.fxml");
-		FillTestController controller = fxmlLoader.getController();
-		controller.prepareTest(testID, testName, amountOfQuestionsInApproach);
+		if(testPasswordField.isVisible()) {
+			if(DBController.checkTestPassword(testID, testPasswordField.getText())) {
+				FXMLLoader fxmlLoader = switchScene(event, "fillTest.fxml");
+				FillTestController controller = fxmlLoader.getController();
+				controller.prepareTest(testID, testName, amountOfQuestionsInApproach);
+			}
+			else {
+				attentionText.setText("Błędne hasło");
+			}
+		}
+		else {
+			FXMLLoader fxmlLoader = switchScene(event, "fillTest.fxml");
+			FillTestController controller = fxmlLoader.getController();
+			controller.prepareTest(testID, testName, amountOfQuestionsInApproach);
+		}
 	}
 
 	public void onHistoriaTestuButtonClick(ActionEvent event) throws IOException {

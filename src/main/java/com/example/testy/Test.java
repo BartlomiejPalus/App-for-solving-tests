@@ -4,18 +4,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Test {
-	private String name;
-	private String category;
-	private int amountOfQuestionsInApproach;
-	private int amountOfApproach;
-	private boolean isOverviewable;
-	private String password;
-	private boolean isPublic;
-	private String creatorID;
-	private List<Question> questionsList;
+	private final String name;
+	private final String category;
+	private final int amountOfQuestionsInApproach;
+	private final int amountOfApproach;
+	private final boolean isOverviewable;
+	private final String password;
+	private final boolean isPublic;
+	private final List<Question> questionsList;
 
 	public Test(String name, String category, int amountOfQuestionsInApproach, int amountOfApproach,
-				boolean isOverviewable, String password, boolean isPublic, String creatorID) {
+				boolean isOverviewable, String password, boolean isPublic) {
 		this.name = name;
 		this.category = category;
 		this.amountOfQuestionsInApproach = amountOfQuestionsInApproach;
@@ -23,7 +22,6 @@ public class Test {
 		this.isOverviewable = isOverviewable;
 		this.password = password;
 		this.isPublic = isPublic;
-		this.creatorID = creatorID;
 		this.questionsList = new LinkedList<>();
 	}
 
@@ -57,10 +55,6 @@ public class Test {
 
 	public boolean isPublic() {
 		return isPublic;
-	}
-
-	public String getCreatorID() {
-		return creatorID;
 	}
 
 	public List<Question> getQuestionsList() {

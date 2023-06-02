@@ -31,9 +31,9 @@
                   <Insets top="-20.0" />
                </VBox.margin>
             </Text>
-            <TextField fx:id="loginField" maxWidth="150.0" promptText="Login" stylesheets="@style.css" />
-            <PasswordField fx:id="passwordField" maxWidth="150.0" promptText="Hasło" />
-            <PasswordField fx:id="repeatPasswordField" maxWidth="150.0" promptText="Powtórz hasło" />
+            <TextField fx:id="loginField" focusTraversable="false" maxWidth="150.0" promptText="Login" stylesheets="@style.css" />
+            <PasswordField fx:id="passwordField" focusTraversable="false" maxWidth="150.0" promptText="Hasło" />
+            <PasswordField fx:id="repeatPasswordField" focusTraversable="false" maxWidth="150.0" promptText="Powtórz hasło" />
             <Button fx:id="zarejestrujButton" mnemonicParsing="false" onAction="#onZarejestrujButtonClick" stylesheets="@style.css" text="Zarejestruj" />
             <Button fx:id="wrocButton" mnemonicParsing="false" onAction="#onWrocButtonClick" stylesheets="@style.css" text="Wróć" />
          </children>

@@ -1,8 +1,8 @@
 package com.example.testy;
 
 public class QuestionPoints {
-	int pointsForGoodAnswer;
-	int pointsForBadAnswer;
+	private final int pointsForGoodAnswer;
+	private final int pointsForBadAnswer;
 
 	QuestionPoints(int pointsForGoodAnswer, int pointsForBadAnswer) {
 		this.pointsForGoodAnswer = pointsForGoodAnswer;

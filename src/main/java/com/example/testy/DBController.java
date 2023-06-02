@@ -11,10 +11,12 @@ public class DBController {
 	private static PreparedStatement statement;
 
 	private static void connect() throws SQLException {
-		final String URL = "jdbc:mysql://127.0.0.1:3306/testy";
-		final String USER = "root";
-		final String PASSWORD = "";
-		connection = DriverManager.getConnection(URL, USER, PASSWORD);
+		if(connection == null || connection.isClosed()) {
+			final String URL = "jdbc:mysql://127.0.0.1:3306/testy";
+			final String USER = "root";
+			final String PASSWORD = "";
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+		}
 	}
 
 	public static int login(String login, String password) throws SQLException, NoSuchAlgorithmException {
@@ -159,11 +161,24 @@ public class DBController {
 
 	public static ResultSet getTestDetails(int testID) throws SQLException {
 		connect();
-		String query = "SELECT id, name, category, amountOfQuestionsInApproach, (SELECT COUNT(*) FROM question WHERE testID = " +
-				testID + ") as totalQuestionsAmount, amountOfApproach, isPublic, (SELECT login FROM login_data WHERE " +
-				"id = (SELECT creatorID FROM test WHERE id = " + testID + ")) as creator FROM test WHERE id = " + testID;
+		String query = "SELECT id, name, category, amountOfQuestionsInApproach, (SELECT COUNT(*) FROM question WHERE " +
+				"testID = " + testID + ") as totalQuestionsAmount, amountOfApproach, (SELECT COUNT(*) > 0 " +
+				"FROM test WHERE password <> '' AND id = " + testID + ") as hasPassword, isPublic, " +
+				"(SELECT login FROM login_data WHERE id = (SELECT creatorID FROM test WHERE id = " + testID + ")) " +
+				"as creator FROM test WHERE id = " + testID;
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
+	}
+
+	public static boolean checkTestPassword(int testID, String password) throws SQLException {
+		connect();
+		String query = "SELECT COUNT(*) > 0 AS corrrectPassword FROM test WHERE id = ? AND password = ?";
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, testID);
+		statement.setString(2, password);
+		ResultSet resultSet = statement.executeQuery();
+		resultSet.next();
+		return resultSet.getBoolean("corrrectPassword");
 	}
 
 	public static ResultSet getQuestionsForTest(int testID, int amountOfQuestions) throws SQLException {
@@ -186,7 +201,7 @@ public class DBController {
 
 	public static ResultSet getAnswersOfQuestion(int questionID) throws SQLException {
 		connect();
-		String query = "SELECT content, isTrue FROM answer WHERE questionID = " + questionID;
+		String query = "SELECT id, content, isTrue FROM answer WHERE questionID = " + questionID;
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
 	}
@@ -197,5 +212,32 @@ public class DBController {
 				" password, isPublic FROM test WHERE id = " + testID;
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
+	}
+
+	public static void addSolution(int testID, int points, int maxPoints, List<UserAnswerRecord> userAnswers) throws SQLException {
+		connect();
+		String query = "INSERT INTO solution (testID, userID, points, maxPoints) VALUES (?, ?, ?, ?)";
+		statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		statement.setInt(1, testID);
+		statement.setInt(2, Account.getInstance().getId());
+		statement.setInt(3, points);
+		statement.setInt(4, maxPoints);
+
+		statement.executeUpdate();
+		ResultSet resultSet = statement.getGeneratedKeys();
+		resultSet.next();
+		addUserAnswers(resultSet.getInt(1), userAnswers);
+	}
+
+	public static void addUserAnswers(int solutionID, List<UserAnswerRecord> userAnswers) throws SQLException {
+		String query = "INSERT INTO user_answer (solutionID, questionID, answerID, isChecked) VALUES (?, ?, ?, ?)";
+		for(UserAnswerRecord answer : userAnswers) {
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, solutionID);
+			statement.setInt(2, answer.questionID());
+			statement.setInt(3, answer.answerID());
+			statement.setBoolean(4, answer.isChecked());
+			statement.executeUpdate();
+		}
 	}
 }

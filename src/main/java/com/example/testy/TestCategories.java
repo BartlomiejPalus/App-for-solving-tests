@@ -4,7 +4,7 @@ public enum TestCategories {
 	MATEMATYKA("Matematyka"), FIZYKA("Fizyka"), INFORMATYKA("Informatyka"),
 	GEOGRAFIA("Geografia"), INNE("Inne");
 	private final String text;
-	private TestCategories(String printedValue) {
+	TestCategories(String printedValue) {
 		this.text = printedValue;
 	}
 

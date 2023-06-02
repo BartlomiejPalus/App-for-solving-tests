@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,6 +46,7 @@ public class FillTestController {
 			i++;
 			VBox vBox = new VBox();
 			vBox.getStyleClass().add("TloWiersza");
+			vBox.setUserData(resultSet.getInt("id"));
 
 			Text questionNumber = new Text("Pytanie " + i);
 			questionNumber.getStyleClass().add("NumerPytania");
@@ -71,12 +74,14 @@ public class FillTestController {
 		while (resultSet.next()) {
 			checkBox = new CheckBox(resultSet.getString("content"));
 			checkBox.setUserData(resultSet.getBoolean("isTrue"));
-			answersVBox.getChildren().add(checkBox);
+			HBox answerHBox = new HBox(checkBox);
+			answerHBox.setUserData(resultSet.getInt("id"));
+			answersVBox.getChildren().add(answerHBox);
 		}
 		return answersVBox;
 	}
 
-	public void onZakonczButtonClick(ActionEvent event) throws IOException {
+	public void onZakonczButtonClick(ActionEvent event) throws IOException, SQLException {
 		ButtonType finishButton = new ButtonType("Zakończ", ButtonBar.ButtonData.OK_DONE);
 		ButtonType cancelButton = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", finishButton, cancelButton);
@@ -101,8 +106,29 @@ public class FillTestController {
 				TestResultController controller =fxmlLoader.getController();
 				int score = calculateScore();
 				controller.fillData(testID, testName, score, maxScore);
+				DBController.addSolution(testID, score, maxScore,getUserAnswers());
 			}
 		}
+	}
+
+	public List<UserAnswerRecord> getUserAnswers() {
+		List<UserAnswerRecord> userAnswers = new ArrayList<>();
+
+		for(int i=0; i<questionsVBox.getChildren().size(); i++) {
+			VBox question = (VBox) questionsVBox.getChildren().get(i);
+			VBox answers = (VBox) question.getChildren().get(2);
+			int questionID = (int) question.getUserData();
+
+			for(int j=0; j<answers.getChildren().size(); j++) {
+				HBox answer = (HBox) answers.getChildren().get(j);
+				int answerID = (int) answer.getUserData();
+				CheckBox checkBox = (CheckBox) answer.getChildren().get(0);
+
+				userAnswers.add(new UserAnswerRecord(questionID, answerID, checkBox.isSelected()));
+			}
+		}
+
+		return userAnswers;
 	}
 
 	public int calculateScore() {
@@ -115,8 +141,10 @@ public class FillTestController {
 			maxScore += questionPoints.getPointsForGoodAnswer();
 			int userAnswer = 0;
 			boolean allGoodChecked = true;
+
 			for(int j=0; j<answers.getChildren().size(); j++) {
-				CheckBox checkBox = (CheckBox) answers.getChildren().get(j);
+				HBox answer = (HBox) answers.getChildren().get(j);
+				CheckBox checkBox = (CheckBox) answer.getChildren().get(0);
 
 				if(checkBox.isSelected() && !((Boolean) checkBox.getUserData())) {
 					userAnswer = -1;
@@ -136,6 +164,8 @@ public class FillTestController {
 				score += questionPoints.getPointsForGoodAnswer();
 			}
 		}
+		if(score < 0)
+			score = 0;
 		return score;
 	}
 }

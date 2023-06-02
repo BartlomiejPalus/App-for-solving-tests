@@ -15,6 +15,11 @@ TextField, PasswordField {
     -fx-background-color: #3A3A3A;
 }
 
+PasswordField {
+	-fx-pref-width: 150px;
+    -fx-max-width: 150px;
+}
+
 Button {
     -fx-background-color: #0080FF;
     -fx-text-fill: #FFFFFF;

@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Question {
-	private String content;
-	private List<Answer> answers;
-	private int goodAnswerPoints;
-	private int badAnswerPoints;
+	private final String content;
+	private final List<Answer> answers;
+	private final int goodAnswerPoints;
+	private final int badAnswerPoints;
 
 	Question(String content, int goodAnswerPoints, int badAnswerPoints) {
 		this.content = content;

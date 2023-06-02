@@ -1,10 +1,8 @@
 package com.example.testy;
 
 public class Answer {
-	private String content;
-	private Boolean isCorrect;
-
-	Answer() {}
+	private final String content;
+	private final Boolean isCorrect;
 
 	Answer(String content, Boolean isCorrect){
 		this.content = content;
