@@ -72,14 +72,14 @@ public class ListOfTestsController implements Initializable {
 				text1.setText("Kategoria: " + resultSet.getString("category") + ", Liczba pytań: " +
 						resultSet.getInt("totalQuestionsAmount"));
 			}
-			Button fillButton = new Button("Wypełnij");
-			fillButton.setUserData(resultSet.getInt("id"));
+			Button detailsButton = new Button("Szczegóły");
+			detailsButton.setUserData(resultSet.getInt("id"));
 
-			fillButton.setOnAction(e -> {
+			detailsButton.setOnAction(e -> {
 				try {
 					FXMLLoader loader = switchScene(e, "testDetails.fxml");
 					TestDetailsController controller = loader.getController();
-					controller.printDetails((int) fillButton.getUserData(), "listOfTests.fxml");
+					controller.printDetails((int) detailsButton.getUserData(), "listOfTests.fxml");
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
@@ -88,7 +88,7 @@ public class ListOfTestsController implements Initializable {
 			Region region = new Region();
 			region.setPrefWidth(1000);
 
-			hBox.getChildren().addAll(text1, region, fillButton);
+			hBox.getChildren().addAll(text1, region, detailsButton);
 
 			vBox.getChildren().add(hBox);
 

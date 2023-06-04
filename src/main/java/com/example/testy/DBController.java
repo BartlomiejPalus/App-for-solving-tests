@@ -161,7 +161,8 @@ public class DBController {
 	public static ResultSet getTestDetails(int testID) throws SQLException {
 		connect();
 		String query = "SELECT id, name, category, amountOfQuestionsInApproach, (SELECT COUNT(*) FROM question WHERE " +
-				"testID = " + testID + ") as totalQuestionsAmount, amountOfApproach, (SELECT COUNT(*) > 0 " +
+				"testID = " + testID + ") as totalQuestionsAmount, (SELECT COUNT(*) FROM solution " +
+				"WHERE userID = " + Account.getInstance().getId() +" AND testID = "+ testID +") as usedApproaches, amountOfApproach, (SELECT COUNT(*) > 0 " +
 				"FROM test WHERE password <> '' AND id = " + testID + ") as hasPassword, isPublic, " +
 				"(SELECT login FROM login_data WHERE id = (SELECT creatorID FROM test WHERE id = " + testID + ")) " +
 				"as creator FROM test WHERE id = " + testID;

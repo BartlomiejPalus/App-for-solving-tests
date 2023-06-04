@@ -3,6 +3,7 @@ package com.example.testy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -22,6 +23,8 @@ public class TestDetailsController {
 	VBox vBoxDetails;
 	@FXML
 	PasswordField testPasswordField;
+	@FXML
+	Button fillTestButton;
 
 	private int testID, amountOfQuestionsInApproach;
 	private String testName, source;
@@ -41,10 +44,17 @@ public class TestDetailsController {
 				questionsAmount.setText("Ilość pytań w podejściu: " + resultSet.getInt("totalQuestionsAmount"));
 			}
 			Text totalQuestionsAmount = new Text("Całkowita ilość pytań w teście: " + resultSet.getInt("totalQuestionsAmount"));
-			Text isRepeatable = new Text("Liczba podejść: " + resultSet.getInt("amountOfApproach"));
-			if(resultSet.getInt("amountOfApproach") == -1) {
-				isRepeatable.setText("Liczba podejść: nieograniczona");
+
+			int amountOfApproaches = resultSet.getInt("amountOfApproach");
+			int usedApproaches = resultSet.getInt("usedApproaches");
+			Text isRepeatable = new Text("Liczba podejść: nieograniczona");
+			if(amountOfApproaches != -1) {
+				isRepeatable.setText("Wykorzystane podejścia: " + usedApproaches + "/" + amountOfApproaches);
+				if(usedApproaches >= amountOfApproaches) {
+					fillTestButton.setDisable(true);
+				}
 			}
+
 			Text visability = new Text("Widoczność: publiczny");
 			if (!resultSet.getBoolean("isPublic")) {
 				visability.setText("Widoczność: prywatny");

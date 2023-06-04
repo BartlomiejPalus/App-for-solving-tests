@@ -41,7 +41,7 @@
          <children>
             <Text fx:id="attentionText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Attention" />
             <PasswordField fx:id="testPasswordField" focusTraversable="false" promptText="Podaj hasło" stylesheets="@style.css" visible="false" />
-            <Button mnemonicParsing="false" onAction="#onWypelnijTestButtonClick" text="Wypełnij test" />
+            <Button fx:id="fillTestButton" mnemonicParsing="false" onAction="#onWypelnijTestButtonClick" text="Wypełnij test" />
             <Button mnemonicParsing="false" onAction="#onHistoriaTestuButtonClick" text="Historia testu" />
             <Button mnemonicParsing="false" onAction="#onWrocButtonClick" stylesheets="@style.css" text="Wróć" />
          </children>
