@@ -56,12 +56,14 @@ public class FillTestController {
 
 			Text questionContent = new Text(resultSet.getString("content"));
 			questionContent.getStyleClass().add("TrescPytania");
+			HBox contentHBox = new HBox(questionContent);
+			contentHBox.setStyle("-fx-padding: 10px");
 
 			VBox answersVBox = drawAnswer(resultSet.getInt("id"));
 			answersVBox.setUserData(new QuestionPoints(resultSet.getInt("pointsForGood"),
 					resultSet.getInt("pointsForBad")));
 
-			vBox.getChildren().addAll(hBox, questionContent, answersVBox);
+			vBox.getChildren().addAll(hBox, contentHBox, answersVBox);
 			questionsVBox.getChildren().add(vBox);
 		}
 	}
@@ -105,8 +107,8 @@ public class FillTestController {
 				FXMLLoader fxmlLoader = switchScene(event, "testResult.fxml");
 				TestResultController controller =fxmlLoader.getController();
 				int score = calculateScore();
-				controller.fillData(testID, testName, score, maxScore);
-				DBController.addSolution(testID, score, maxScore,getUserAnswers());
+				int solutionID = DBController.addSolution(testID, score, maxScore,getUserAnswers());
+				controller.fillData(testID, solutionID, testName, score, maxScore);
 			}
 		}
 	}

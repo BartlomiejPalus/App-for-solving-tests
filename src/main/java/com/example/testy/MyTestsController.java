@@ -53,6 +53,7 @@ public class MyTestsController implements Initializable {
 			vBox.getStyleClass().add("TloWiersza");
 			vBox.setSpacing(10);
 			vBox.setPadding(new Insets(15));
+			vBox.setUserData(resultSet.getInt("id"));
 
 			Text title = new Text(resultSet.getString("name"));
 			title.getStyleClass().add("TestNazwaLista");
@@ -70,12 +71,13 @@ public class MyTestsController implements Initializable {
 			resultsButton.getStyleClass().add("ListButton");
 			Button editButton = new Button("Edytuj");
 			editButton.getStyleClass().add("ListButton");
-			editButton.setUserData(resultSet.getInt("id"));
 
 			resultsButton.setOnAction(e -> {
 				try {
-					switchScene(e, "testResults.fxml");
-				} catch (IOException ex) {
+					FXMLLoader fxmlLoader = switchScene(e, "testResults.fxml");
+					TestResultsController controller = fxmlLoader.getController();
+					controller.setParameters((int) vBox.getUserData());
+				} catch (IOException | SQLException ex) {
 					throw new RuntimeException(ex);
 				}
 			});
@@ -84,7 +86,7 @@ public class MyTestsController implements Initializable {
 				try {
 					FXMLLoader loader = switchScene(e, "addTest.fxml");
 					AddTestController controller = loader.getController();
-					controller.setState("edit", (int) editButton.getUserData());
+					controller.setState("edit", (int) vBox.getUserData());
 				} catch (IOException | SQLException ex) {
 					throw new RuntimeException(ex);
 				}

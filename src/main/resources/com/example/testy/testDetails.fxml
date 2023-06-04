@@ -19,14 +19,14 @@
             <Insets />
          </opaqueInsets>
       </HBox>
-      <HBox alignment="CENTER" fillHeight="false" prefHeight="270.0" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER" fillHeight="false" prefHeight="300.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox fx:id="vBoxDetails" alignment="CENTER" spacing="20.0" styleClass="SzczegolyTestu" stylesheets="@style.css" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
                <padding>
-                  <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
             </VBox>
          </children>
@@ -37,7 +37,7 @@
             <Insets left="50.0" right="50.0" />
          </opaqueInsets>
       </HBox>
-      <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="350.0" prefWidth="900.0" spacing="20.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" prefHeight="300.0" prefWidth="900.0" spacing="20.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
          <children>
             <Text fx:id="attentionText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Attention" />
             <PasswordField fx:id="testPasswordField" focusTraversable="false" promptText="Podaj hasło" stylesheets="@style.css" visible="false" />

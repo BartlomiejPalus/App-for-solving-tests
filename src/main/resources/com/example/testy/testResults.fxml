@@ -22,8 +22,8 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <TextField fx:id="nazwaTestuTextField" prefWidth="220.0" promptText="Wprowadź nazwę użytkownika" />
-            <Button mnemonicParsing="false" text="Szukaj" />
+            <TextField fx:id="userNameTextField" focusTraversable="false" prefWidth="220.0" promptText="Wprowadź nazwę użytkownika" />
+            <Button mnemonicParsing="false" onAction="#onSzukajButtonClick" text="Szukaj" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="450.0" spacing="30.0" VBox.vgrow="ALWAYS">

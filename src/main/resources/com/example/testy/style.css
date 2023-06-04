@@ -102,6 +102,7 @@ Button:pressed  {
     -fx-text-fill: white;
   	-fx-font: 18px "calibiri";
     -fx-font-weight: bold;
+    -fx-padding: 5px;
 }
 
 ScrollPane > .viewport {
@@ -132,6 +133,11 @@ Pane {
 	-fx-background-color: #2f2f2f;
 	-fx-pref-height: 150;
 	-fx-background-radius: 18;
+}
+
+.SzczegolyTestu > Text {
+	-fx-font: 24px "calibiri";
+    -fx-font-weight: bold;
 }
 
 #vBoxSzczegoly > Text {
@@ -212,14 +218,6 @@ ComboBox {
     -fx-mark-color: #0080FF;
 }
 
-/* CheckBox */
-
-CheckBox {
-	-fx-text-fill: white;
-	-fx-font: 14px "calibiri";
-    -fx-font-weight: bold;
-}
-
 /* Alert */
 
 DialogPane, DialogPane:header *.header-panel {
@@ -249,4 +247,45 @@ DialogPane .button {
 
 .AlertRedButton:hover {
 	-fx-background-color: #BF0000;
+}
+
+.GoodAnswer {
+	-fx-background-color: #24CF3F;
+	-fx-background-radius: 5px;
+}
+
+.BadAnswer {
+	-fx-background-color: #E63215;
+	-fx-background-radius: 5px;
+}
+
+/* CheckBox */
+
+CheckBox {
+	-fx-text-fill: white;
+	-fx-font: 14px "calibiri";
+    -fx-font-weight: bold;
+}
+
+.check-box:disabled {
+    -fx-opacity: 0.9;
+}
+
+.check-box .box {
+	-fx-background-color: white;
+	-fx-border-color: grey;
+	-fx-border-radius: 3px;
+}
+
+.check-box:disabled .box {
+	-fx-border-color: black;
+	-fx-background-color: #989898;
+}
+
+.check-box:selected .box {
+	-fx-background-color: #0080FF;
+}
+
+.check-box:selected .mark {
+	-fx-background-color: white;
 }

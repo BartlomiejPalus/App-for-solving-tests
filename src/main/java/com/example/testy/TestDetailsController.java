@@ -24,11 +24,11 @@ public class TestDetailsController {
 	PasswordField testPasswordField;
 
 	private int testID, amountOfQuestionsInApproach;
-	private String testName;
+	private String testName, source;
 
-	public void printDetails(int testID) {
+	public void printDetails(int testID, String source) {
 		this.testID = testID;
-
+		this.source = source;
 		try {
 			ResultSet resultSet = getTestDetails(testID);
 			resultSet.next();
@@ -78,12 +78,14 @@ public class TestDetailsController {
 		}
 	}
 
-	public void onHistoriaTestuButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, "testsHistory.fxml");
+	public void onHistoriaTestuButtonClick(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader fxmlLoader = switchScene(event, "testsHistory.fxml");
+		TestsHistoryController controller = fxmlLoader.getController();
+		controller.setParameters(testID, "testDetails.fxml");
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, "listOfTests.fxml");
+		switchScene(event, source);
 	}
 
 	public void onHelpClick(ActionEvent event) {

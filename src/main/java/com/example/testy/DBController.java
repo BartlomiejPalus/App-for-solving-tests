@@ -154,7 +154,6 @@ public class DBController {
 		if(condition != null && !condition.isBlank()) {
 			query += " AND " + condition;
 		}
-		System.out.println(query);
 		statement = connection.prepareStatement(query);
 		return statement.executeQuery();
 	}
@@ -214,7 +213,7 @@ public class DBController {
 		return statement.executeQuery();
 	}
 
-	public static void addSolution(int testID, int points, int maxPoints, List<UserAnswerRecord> userAnswers) throws SQLException {
+	public static int addSolution(int testID, int points, int maxPoints, List<UserAnswerRecord> userAnswers) throws SQLException {
 		connect();
 		String query = "INSERT INTO solution (testID, userID, points, maxPoints) VALUES (?, ?, ?, ?)";
 		statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -227,6 +226,7 @@ public class DBController {
 		ResultSet resultSet = statement.getGeneratedKeys();
 		resultSet.next();
 		addUserAnswers(resultSet.getInt(1), userAnswers);
+		return resultSet.getInt(1);
 	}
 
 	public static void addUserAnswers(int solutionID, List<UserAnswerRecord> userAnswers) throws SQLException {
@@ -239,5 +239,50 @@ public class DBController {
 			statement.setBoolean(4, answer.isChecked());
 			statement.executeUpdate();
 		}
+	}
+
+	public static ResultSet getUserSolutions(String condition) throws SQLException {
+		connect();
+		String query = "SELECT s.id as solutionID, t.id as testID, t.name, t.category, s.points, s.maxPoints FROM solution s " +
+				"JOIN test t ON s.testID = t.id WHERE s.userID = ?";
+		if(condition != null && !condition.isBlank()) {
+			query += condition;
+		}
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, Account.getInstance().getId());
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getQuestionsOfSolution(int solutionID) throws SQLException {
+		connect();
+		String query = "SELECT DISTINCT q.id, q.content, q.pointsForGood, q.pointsForBad FROM solution s " +
+				"JOIN user_answer ua ON s.id = ua.solutionID JOIN question q ON ua.questionID = q.id WHERE s.id = ?";
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, solutionID);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getAnswersOfSolution(int solutionID, int questionID) throws SQLException {
+		connect();
+		String query = "SELECT DISTINCT a.content, a.isTrue, ua.isChecked FROM solution s " +
+				"JOIN user_answer ua ON s.id = ua.solutionID JOIN answer a ON ua.answerID = a.id " +
+				"WHERE s.id = ? AND ua.questionID = ?";
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, solutionID);
+		statement.setInt(2, questionID);
+		return statement.executeQuery();
+	}
+
+	public static ResultSet getTestSolutions(int testID, String condition) throws SQLException {
+		connect();
+		String query = "SELECT s.id AS solutionID, t.id AS testID, t.name, t.category, s.points, s.maxPoints, ld.login " +
+				"FROM solution s JOIN test t ON s.testID = t.id JOIN login_data ld ON ld.id = s.userID WHERE s.testID = ?";
+		if(condition != null && !condition.isBlank()) {
+			query += condition;
+		}
+		System.out.println(query);
+		statement = connection.prepareStatement(query);
+		statement.setInt(1, testID);
+		return statement.executeQuery();
 	}
 }

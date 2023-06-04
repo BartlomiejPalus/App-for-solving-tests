@@ -79,7 +79,7 @@ public class ListOfTestsController implements Initializable {
 				try {
 					FXMLLoader loader = switchScene(e, "testDetails.fxml");
 					TestDetailsController controller = loader.getController();
-					controller.printDetails((int) fillButton.getUserData());
+					controller.printDetails((int) fillButton.getUserData(), "listOfTests.fxml");
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
 				}
@@ -97,10 +97,10 @@ public class ListOfTestsController implements Initializable {
 	}
 
 	public void onFiltrujButtonClick() throws SQLException {
-		String condition = "name LIKE \"%" + nazwaTestuTextField.getText() + "%\"";
+		String condition = "name LIKE '%" + nazwaTestuTextField.getText() + "%'";
 
 		if (kategorieComboBox.getValue() != null && !kategorieComboBox.getValue().equals("Wszystkie")) {
-			condition += " AND category = \"" + kategorieComboBox.getValue() + "\"";
+			condition += " AND category = '" + kategorieComboBox.getValue() + "'";
 		}
 
 		if (iloscPytanComboBox.getValue() != null && !iloscPytanComboBox.getValue().equals("Wszystkie")) {

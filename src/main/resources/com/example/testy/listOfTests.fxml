@@ -18,7 +18,7 @@
    <children>
       <HBox alignment="CENTER" maxHeight="100.0" prefHeight="100.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="NazwaEkranu" text="Testy" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="NazwaEkranu" text="Lista testów" />
          </children>
          <opaqueInsets>
             <Insets />

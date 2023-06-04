@@ -1,10 +1,12 @@
 package com.example.testy;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.example.testy.SceneSwitcher.switchScene;
 
@@ -18,8 +20,10 @@ public class MainMenuController {
 		switchScene(event, "myTests.fxml");
 	}
 
-	public void onHistoriaTestowButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, "testsHistory.fxml");
+	public void onHistoriaTestowButtonClick(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader fxmlLoader = switchScene(event, "testsHistory.fxml");
+		TestsHistoryController controller = fxmlLoader.getController();
+		controller.setParameters(-1, "mainMenu.fxml");
 	}
 
 	public void onWylogujButtonClick(ActionEvent event) throws IOException {
