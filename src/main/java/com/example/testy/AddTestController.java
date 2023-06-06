@@ -45,6 +45,7 @@ public class AddTestController implements Initializable {
 	@FXML
 	Text windowNameText ,attentionText;
 
+	String mode;
 	private int testID;
 
 	@Override
@@ -56,9 +57,10 @@ public class AddTestController implements Initializable {
 		visabilityComboBox.getSelectionModel().selectFirst();
 	}
 
-	public void setState(String state, int testID) throws SQLException {
+	public void setMode(String mode, int testID) throws SQLException {
+		this.mode = mode;
 		this.testID = testID;
-		if(state.equals("addTest")) {
+		if(mode.equals("addTest")) {
 			addQuestion(null);
 		}
 		else {
@@ -277,7 +279,12 @@ public class AddTestController implements Initializable {
 	}
 
 	public void onHelpClick() {
-
+		if(mode.equals("addTest")) {
+			InstructionOpener.openPage("dodajTestEkran.html");
+		}
+		else {
+			InstructionOpener.openPage("edytujTestEkran.html");
+		}
 	}
 
 	public boolean addTest() throws SQLException {

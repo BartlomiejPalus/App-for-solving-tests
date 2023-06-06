@@ -41,7 +41,7 @@ public class StartWindowController {
         switchScene(event, "register.fxml");
     }
 
-    public void onHelpClick(ActionEvent event) {
-
+    public void onHelpClick() {
+        InstructionOpener.openPage("logowanieEkran.html");
     }
 }

@@ -77,7 +77,7 @@ public class TestsHistoryController implements Initializable {
 					resultSet.getString("points") + "/" + resultSet.getString("maxPoints") +
 					" (" + formattedPercent + "%)");
 
-			Button showAnswersButton = new Button("Zobacz odpowiedzi");
+			Button showAnswersButton = new Button("Pokaż odpowiedzi");
 			showAnswersButton.setUserData(resultSet.getInt("solutionID"));
 			Button fillAgainButton = new Button("Rozwiąż ponownie");
 			fillAgainButton.setUserData(resultSet.getInt("testID"));
@@ -145,7 +145,7 @@ public class TestsHistoryController implements Initializable {
 		}
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("historiaTestowEkran.html");
 	}
 }

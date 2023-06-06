@@ -151,7 +151,7 @@ public class ListOfTestsController implements Initializable {
 		switchScene(event, "mainMenu.fxml");
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("listaTestowEkran.html");
 	}
 }

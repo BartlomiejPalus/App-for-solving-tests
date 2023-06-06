@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+	<title>Instrukcja aplikacji</title>
+	<script src="script.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="sidebar">
+			<h3>Wybierz operację:</h3>
+			<ul>
+				<li><a href="logowanie.html">Logowanie</a></li>
+				<li><a href="wylogowanie.html">Wylogowanie</a></li>
+				<li><a href="rejestracja.html">Rejestracja</a></li>
+				<li><a href="tworzenieTestu.html">Tworzenie testu</a></li>
+				<li><a href="edytowanieTestu.html">Edytowanie testu</a></li>
+				<li><a href="usuwanieTestu.html">Usuwanie testu</a></li>
+				<li><a href="wypełnianieTestu.html">Wypełnianie testu</a></li>
+				<li><a href="historiaUzytkownika.html">Wyświetlanie histori testów użytkownika</a></li>
+				<li><a href="wynikiTestu.html">Wyświetlanie wyników testu</a></li>
+			</ul>
+			<h3>Wybierz okno:</h3>
+			<ul>
+				<li><a href="logowanieEkran.html">Logowanie</a></li>
+				<li><a href="rejestracjaEkran.html">Rejestracja</a></li>
+				<li><a href="menuGlowneEkran.html">Menu główne</a>
+					<ul>
+						<li><a href="listaTestowEkran.html">Lista testów</a>
+							<ul>
+								<li><a href="szczegolyTestuEkran.html">Szczegóły testu</a></li>
+								<li><a href="wypelnianieTestuEkran.html">Wypełnianie testu</a></li>
+								<li><a href="wynikTestuEkran.html">Wynik testu</a></li>
+								<li><a href="pokazOdpowiedziEkran.html">Pokaż odpowiedzi</a></li>
+							</ul>
+						</li>
+						<li><a href="mojeTestyEkran.html">Moje testy</a>
+							<ul>
+								<li><a href="dodajTestEkran.html">Dodaj test</a></li>
+								<li><a href="edytujTestEkran.html">Edytuj test</a></li>
+								<li><a href="wynikiTestuEkran.html">Wyniki testu</a></li>
+							</ul>
+						</li>
+						<li><a href="historiaTestowEkran.html">Historia testów</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="content">
+			<div class="logo">
+				<img src="logo.png" alt="Logo aplikacji">
+			</div>
+			<div id="instruction">
+				<h1>Okno dodaj test</h1>
+				<p>Okno dodawania testu zawiera pola takie jak:</p>
+				<ul>
+					<li>Listę testów użytkownika. Każdy test posiada przycisk "Wyniki" który przenosi użytkownika do ekranu "Wyniki testu" oraz przycisk "Edytuj" pozwalający edytować test.</li>
+					<li>Sekcję z pytaniami testu. Każde pytanie zawiera pola takie jak:
+						<ul>
+							<li>Numer pytania wraz z przyciskiem do usunięcia pytania.</li>
+							<li>Dwa pola testowe w prawym górnym rogu służące do podania indywidualnej punktacji dla pytania.</li>
+							<li>Pole do wprowadzenia treści pytania.</li>
+							<li>Wiersz z checkbox'em do zaznaczenia czy odpowiedź jest poprawna, numerem odpowiedzi, polem tekstowym do wprowadzenia treści pytania oraz przyciskiem do usunięcia pytania.</li>
+							<li>Przycisk "Dodaj odpowiedź" pozwalającym dodać kolejną odpowiedź do pytania.</li>
+						</ul>
+					</li>
+					<li>Przycisk "Dodaj pytanie" pod wszystkimi pytaniami pozwalający dodać pytanie do testu.</li>
+					<li>Sekcję z parametrami testu takimi jak:
+					<ul>
+						<li>"Punktacja domyślna" określającym punktację pytań które nie posiadają określonej punktacji.
+							<ul>
+								<li>W lewym polu znajdują się punkty za poprawną odpowiedź.</li>
+								<li>W prawym polu znajdują się punkty za błędną odpowiedź.</li>
+							</ul>
+						</li>
+						<li>"Nazwa testu" określającym nazwę testu.</li>
+						<li>"Kategoria" pozwalającym wybrać kategorię testu z listy.</li>
+						<li>"Ilosć pytań w podejściu" określającym czy w podejściu mają być wyświetlane wszystkie pytania czy określona ilość podana w polu tekstowym.</li>
+						<li>"Ilosć podejść" określającym czy użytkownik może rozwiązywać test nieograniczoną liczbę razy czy określoną liczbę razy podaną w polu tekstowym.</li>
+						<li>"Możliwość przeglądania" określającym czy użytkownik może przeglądać swoje odpowiedzi po rzowiązanu testu.</li>
+						<li>"Hasło" określającym hasło do testu wymagane do jego rozwiązania. W przypadku pozostawienia pola pustego test nie będzie posiadał hasła.</li>
+						<li>"Widoczność" określającym czy test będzie widoczny dla innych użytkowników czy tylko dla twórcy.</li>
+					</ul>
+					<li>Przycisk "Utwórz" który powoduje sprawdzenie poprawności wypełniena pól oraz czy wszystkie niezbędne parametry zostały ustwione. 
+					Jeżeli test jest poprawny zostanie on utworzony, w przeciwnym wypadku zostanie wyświetlony komunikat o błędzie.</li>
+					<li>Przycisk "Anuluj" który powoduje anulowanie dodawania testu oraz przenosi do okna "Moje testy".</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

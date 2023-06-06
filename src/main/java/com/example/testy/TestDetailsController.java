@@ -94,11 +94,15 @@ public class TestDetailsController {
 		controller.setParameters(testID, "testDetails.fxml");
 	}
 
-	public void onWrocButtonClick(ActionEvent event) throws IOException {
-		switchScene(event, source);
+	public void onWrocButtonClick(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader fxmlLoader = switchScene(event, source);
+		if(source.equals("testsHistory.fxml")) {
+			TestsHistoryController controller = fxmlLoader.getController();
+			controller.setParameters(-1, "mainMenu.fxml");
+		}
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("szczegolyTestuEkran.html");
 	}
 }

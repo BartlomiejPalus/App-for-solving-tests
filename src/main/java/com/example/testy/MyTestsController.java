@@ -86,7 +86,7 @@ public class MyTestsController implements Initializable {
 				try {
 					FXMLLoader loader = switchScene(e, "addTest.fxml");
 					AddTestController controller = loader.getController();
-					controller.setState("edit", (int) vBox.getUserData());
+					controller.setMode("edit", (int) vBox.getUserData());
 				} catch (IOException | SQLException ex) {
 					throw new RuntimeException(ex);
 				}
@@ -132,14 +132,14 @@ public class MyTestsController implements Initializable {
 	public void onDodajTestButtonClick(ActionEvent event) throws IOException, SQLException {
 		FXMLLoader fxmlLoader = switchScene(event, "addTest.fxml");
 		AddTestController controller = fxmlLoader.getController();
-		controller.setState("addTest", -1);
+		controller.setMode("addTest", -1);
 	}
 
 	public void onWrocButtonClick(ActionEvent event) throws IOException {
 		switchScene(event, "mainMenu.fxml");
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("mojeTestyEkran.html");
 	}
 }

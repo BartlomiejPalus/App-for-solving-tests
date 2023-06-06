@@ -44,7 +44,7 @@ public class TestResultController {
 		switchScene(event, "listOfTests.fxml");
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("wynikTestuEkran.html");
 	}
 }

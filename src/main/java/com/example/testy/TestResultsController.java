@@ -55,7 +55,7 @@ public class TestResultsController {
 					resultSet.getString("points") + "/" + resultSet.getString("maxPoints") +
 					" (" + formattedPercent + "%)");
 
-			Button showAnswersButton = new Button("Zobacz odpowiedzi");
+			Button showAnswersButton = new Button("Pokaż odpowiedzi");
 			showAnswersButton.setUserData(resultSet.getInt("solutionID"));
 
 			showAnswersButton.setOnAction(e -> {
@@ -89,7 +89,7 @@ public class TestResultsController {
 		switchScene(event, "myTests.fxml");
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("wynikiTestuEkran.html");
 	}
 }

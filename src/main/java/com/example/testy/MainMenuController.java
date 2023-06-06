@@ -36,7 +36,7 @@ public class MainMenuController {
 		stage.close();
 	}
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("menuGlowneEkran.html");
 	}
 }

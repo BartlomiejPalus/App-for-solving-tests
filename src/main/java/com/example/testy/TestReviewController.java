@@ -96,4 +96,8 @@ public class TestReviewController {
 			controller.setParameters(testID);
 		}
 	}
+
+	public void onHelpClick() {
+		InstructionOpener.openPage("pokazOdpowiedziEkran.html");
+	}
 }

@@ -42,7 +42,7 @@ public class RegisterController {
 		switchScene(event, "startWindow.fxml");
     }
 
-	public void onHelpClick(ActionEvent event) {
-
+	public void onHelpClick() {
+		InstructionOpener.openPage("rejestracjaEkran.html");
 	}
 }
